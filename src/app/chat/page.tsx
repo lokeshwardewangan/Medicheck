@@ -7,7 +7,7 @@ import { RedFlagAlert } from '@/features/triage/components/red-flag-alert';
 import { LoadingSpinner } from '@/components/shared/loading-spinner';
 import { useAssessmentStore } from '@/features/assessment/store/assessment-store';
 import { checkEmergencyKeywords, extractEmergencySymptoms } from '@/features/triage/data/emergency-keywords';
-import { chatWithAI } from '@/lib/gemini';
+import { sendChatMessage } from '@/features/chat/lib/chat-client';
 import type { ChatMessage } from '@/types';
 
 export default function ChatPage() {
@@ -61,15 +61,13 @@ export default function ChatPage() {
       setLoading(true);
 
       try {
-        // Get AI response
-        const history = chatMessages.map((m) => ({
-          role: m.role,
-          content: m.content,
-        }));
+        const conversation = [
+          ...chatMessages.map((m) => ({ role: m.role, content: m.content })),
+          { role: 'user' as const, content },
+        ];
 
-        const response = await chatWithAI(content, history);
+        const response = await sendChatMessage(conversation);
 
-        // Add AI message
         addChatMessage({
           id: (Date.now() + 1).toString(),
           role: 'assistant',
@@ -77,11 +75,6 @@ export default function ChatPage() {
           timestamp: new Date(),
           isEmergency: response.isEmergency,
         });
-
-        // Check if we have enough info to proceed
-        if (chatMessages.length >= 4) {
-          // Could show a "Continue to Assessment" button
-        }
       } catch (error) {
         console.error('Chat error:', error);
         addChatMessage({

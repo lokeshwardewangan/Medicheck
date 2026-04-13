@@ -149,50 +149,6 @@ Respond in JSON format:
   }
 }
 
-export async function chatWithAI(
-  message: string,
-  history: { role: 'user' | 'assistant'; content: string }[]
-): Promise<{ message: string; isEmergency: boolean }> {
-  const prompt = `
-${TRIAGE_SYSTEM_PROMPT}
-
-You are having a conversation with a user about their health concerns.
-Be empathetic, clear, and concise. Ask one question at a time to gather information.
-If the user mentions any emergency symptoms, set isEmergency to true.
-
-Conversation History:
-${history.map((h) => `${h.role}: ${h.content}`).join('\n')}
-
-User: ${message}
-
-Respond in JSON format:
-{
-  "message": "Your response",
-  "isEmergency": false
-}`;
-
-  try {
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
-
-    const jsonMatch = response.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      return {
-        message: 'I understand. Can you tell me more about your symptoms?',
-        isEmergency: false,
-      };
-    }
-
-    return JSON.parse(jsonMatch[0]);
-  } catch (error) {
-    console.error('Error in chat:', error);
-    return {
-      message: 'I apologize, but I had trouble processing that. Could you rephrase?',
-      isEmergency: false,
-    };
-  }
-}
-
 function getDefaultQuestions(): FollowUpQuestion[] {
   return [
     {
