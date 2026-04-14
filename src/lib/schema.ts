@@ -43,6 +43,20 @@ export const assessmentSessionSchema = z.object({
 
 export type AssessmentSessionSchema = z.infer<typeof assessmentSessionSchema>;
 
+// Follow-up Question Schema
+export const followUpQuestionSchema = z.object({
+  id: z.string(),
+  question: z.string(),
+  type: z.enum(['single_choice', 'multiple_choice', 'text', 'number', 'boolean']),
+  options: z.array(z.string()).optional(),
+  required: z.boolean(),
+  category: z.enum(['duration', 'severity', 'history', 'lifestyle', 'other']),
+});
+
+export const followUpQuestionsSchema = z.array(followUpQuestionSchema);
+
+export type FollowUpQuestionSchema = z.infer<typeof followUpQuestionSchema>;
+
 // Triage Result Schema (for API validation)
 export const triageResultSchema = z.object({
   level: z.enum(['emergency', 'urgent', 'routine', 'self_care']),

@@ -9,7 +9,7 @@ import { ErrorRetry } from '@/components/shared/error-retry';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAssessmentStore } from '@/features/assessment/store/assessment-store';
-import { generateFollowUpQuestions } from '@/lib/gemini';
+import { requestFollowUpQuestions } from '@/features/assessment/lib/follow-up-client';
 import type { FollowUpQuestion, Symptom } from '@/types';
 
 // Default questions if API fails
@@ -82,7 +82,10 @@ export default function AssessmentPage() {
         // Use default questions
         setFollowUpQuestions(defaultQuestions);
       } else {
-        const questions = await generateFollowUpQuestions(extractedSymptoms, {});
+        const questions = await requestFollowUpQuestions(
+          extractedSymptoms.map((s) => ({ name: s.name, bodyPart: s.bodyPart })),
+          {}
+        );
         setFollowUpQuestions(questions.length > 0 ? questions : defaultQuestions);
       }
     } catch (err) {

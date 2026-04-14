@@ -12,7 +12,7 @@ import { ErrorRetry } from '@/components/shared/error-retry';
 import { Button } from '@/components/ui/button';
 import { useAssessmentStore } from '@/features/assessment/store/assessment-store';
 import { useHistoryStore } from '@/features/history/store/history-store';
-import { analyzeSymptoms } from '@/lib/gemini';
+import { requestTriage } from '@/features/triage/lib/triage-client';
 import type { TriageResult, Symptom } from '@/types';
 
 export default function ResultsPage() {
@@ -55,7 +55,7 @@ export default function ResultsPage() {
           description: m.content,
         }));
 
-      const triageResult = await analyzeSymptoms(symptoms, followUpAnswers, profile);
+      const triageResult = await requestTriage(symptoms, followUpAnswers, profile);
 
       setResult(triageResult);
       setTriageResult(triageResult);
