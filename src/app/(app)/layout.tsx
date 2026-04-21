@@ -1,16 +1,24 @@
 import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
+import { MemberSwitcher } from '@/features/members/components/member-switcher';
 import { requireSession } from '@/server/auth/session';
+import { listMembers, getCurrentMember } from '@/features/members/server/queries';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  // Middleware blocks unauthenticated requests at the edge via cookie presence.
-  // This server-side check additionally validates the session against the DB
-  // and redirects if it's expired or revoked.
-  await requireSession();
+  const session = await requireSession();
+  const [members, current] = await Promise.all([
+    listMembers(session.user.id),
+    getCurrentMember(session.user.id),
+  ]);
 
   return (
     <>
       <Navbar />
+      <div className="border-b bg-muted/30">
+        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+          <MemberSwitcher members={members} currentMemberId={current?.id ?? null} />
+        </div>
+      </div>
       <main className="flex-1">{children}</main>
       <Footer />
     </>
