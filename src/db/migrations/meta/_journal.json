@@ -15,6 +15,13 @@
       "when": 1779451665888,
       "tag": "0001_useful_baron_zemo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779452162476,
+      "tag": "0002_loose_xorn",
+      "breakpoints": true
     }
   ]
 }
