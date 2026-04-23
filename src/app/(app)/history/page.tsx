@@ -1,12 +1,10 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
+import { Calendar, Stethoscope, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useHistoryStore } from '@/features/history/store/history-store';
-import { Calendar, Trash2, ChevronRight, Stethoscope } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { requireSession } from '@/server/auth/session';
+import { listHistory } from '@/features/assessment/server/queries';
 import type { TriageLevel } from '@/types';
 
 const triageColors: Record<TriageLevel, string> = {
@@ -23,135 +21,96 @@ const triageLabels: Record<TriageLevel, string> = {
   self_care: 'Self-Care',
 };
 
-export default function HistoryPage() {
-  const router = useRouter();
-  const { histories, deleteHistory, clearAllHistory } = useHistoryStore();
+function formatDateTime(date: Date) {
+  const d = new Date(date);
+  return d.toLocaleString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
 
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
-
-  const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
+export default async function HistoryPage() {
+  const session = await requireSession();
+  const items = await listHistory(session.user.id);
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container max-w-3xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold mb-1">Your Health History</h1>
+            <h1 className="text-2xl font-bold mb-1">Your health history</h1>
             <p className="text-muted-foreground">
-              Review your past symptom checks
+              Past assessments across all members
             </p>
           </div>
-          <Button variant="outline" onClick={() => router.push('/')}>
-            ← Back
-          </Button>
+          <Link href="/">
+            <Button variant="outline">← Back</Button>
+          </Link>
         </div>
 
-        {histories.length === 0 ? (
+        {items.length === 0 ? (
           <Card className="text-center py-12">
             <CardContent>
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                 <Stethoscope className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-medium mb-2">No History Yet</h3>
+              <h3 className="text-lg font-medium mb-2">No history yet</h3>
               <p className="text-muted-foreground mb-4">
-                Your symptom check history will appear here
+                Your completed symptom checks will appear here.
               </p>
-              <Button onClick={() => router.push('/chat')}>
-                Start Your First Check
-              </Button>
+              <Link href="/chat">
+                <Button>Start your first check</Button>
+              </Link>
             </CardContent>
           </Card>
         ) : (
-          <>
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-sm text-muted-foreground">
-                {histories.length} check{histories.length !== 1 ? 's' : ''} recorded
-              </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearAllHistory}
-                className="text-destructive"
-              >
-                <Trash2 className="h-4 w-4 mr-1" />
-                Clear All
-              </Button>
-            </div>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {items.length} check{items.length !== 1 ? 's' : ''} recorded
+            </p>
 
-            <ScrollArea className="h-[calc(100vh-250px)]">
-              <div className="space-y-4">
-                {histories.map((history) => (
-                  <Card key={history.id} className="hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">
-                              {formatDate(history.createdAt)} at {formatTime(history.createdAt)}
-                            </span>
-                          </div>
+            {items.map((item) => (
+              <Card key={item.assessmentId} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4" />
+                    <span>{formatDateTime(item.createdAt)}</span>
+                    <span className="mx-1">·</span>
+                    <User className="h-4 w-4" />
+                    <span>{item.memberName}</span>
+                  </div>
 
-                          <div className="mb-3">
-                            <p className="text-sm font-medium mb-1">Symptoms:</p>
-                            <div className="flex flex-wrap gap-1">
-                              {history.symptoms.slice(0, 3).map((symptom, i) => (
-                                <Badge key={i} variant="secondary" className="text-xs">
-                                  {symptom.slice(0, 30)}{symptom.length > 30 ? '...' : ''}
-                                </Badge>
-                              ))}
-                              {history.symptoms.length > 3 && (
-                                <Badge variant="outline" className="text-xs">
-                                  +{history.symptoms.length - 3} more
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-
-                          <Badge
-                            className={`${triageColors[history.triageLevel]} border`}
-                          >
-                            {triageLabels[history.triageLevel]}
+                  {item.symptoms.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-sm font-medium mb-1">Symptoms</p>
+                      <div className="flex flex-wrap gap-1">
+                        {item.symptoms.slice(0, 3).map((s, i) => (
+                          <Badge key={i} variant="secondary" className="text-xs">
+                            {s.slice(0, 40)}
+                            {s.length > 40 ? '...' : ''}
                           </Badge>
-
-                          {history.feedback && (
-                            <p className="text-xs text-muted-foreground mt-2">
-                              You marked this as {history.feedback.replace('_', ' ')}
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="flex flex-col gap-2 ml-4">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => deleteHistory(history.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-muted-foreground" />
-                          </Button>
-                          <Button variant="ghost" size="icon">
-                            <ChevronRight className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        ))}
+                        {item.symptoms.length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{item.symptoms.length - 3} more
+                          </Badge>
+                        )}
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </ScrollArea>
-          </>
+                    </div>
+                  )}
+
+                  {item.triage && (
+                    <Badge className={`${triageColors[item.triage.level]} border`}>
+                      {triageLabels[item.triage.level]}
+                    </Badge>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         )}
       </div>
     </div>

@@ -11,8 +11,7 @@ import { LoadingSpinner } from '@/components/shared/loading-spinner';
 import { ErrorRetry } from '@/components/shared/error-retry';
 import { Button } from '@/components/ui/button';
 import { useAssessmentStore } from '@/features/assessment/store/assessment-store';
-import { useHistoryStore } from '@/features/history/store/history-store';
-import { requestTriage } from '@/features/triage/lib/triage-client';
+import { submitAssessment } from '@/features/assessment/server/actions';
 import type { TriageResult, Symptom } from '@/types';
 
 export default function ResultsPage() {
@@ -24,14 +23,11 @@ export default function ResultsPage() {
   const {
     chatMessages,
     followUpAnswers,
-    profile,
     setTriageResult,
     setStep,
     setStatus,
     resetSession,
   } = useAssessmentStore();
-
-  const addHistory = useHistoryStore((state) => state.addHistory);
 
   useEffect(() => {
     setStep(4);
@@ -44,7 +40,6 @@ export default function ResultsPage() {
     setError(null);
 
     try {
-      // Extract symptoms from chat messages
       const symptoms: Symptom[] = chatMessages
         .filter((m) => m.role === 'user')
         .map((m, i) => ({
@@ -55,21 +50,27 @@ export default function ResultsPage() {
           description: m.content,
         }));
 
-      const triageResult = await requestTriage(symptoms, followUpAnswers, profile);
-
-      setResult(triageResult);
-      setTriageResult(triageResult);
-
-      // Save to history
-      addHistory({
-        sessionId: Date.now().toString(),
-        symptoms: symptoms.map((s) => s.name),
-        triageLevel: triageResult.level,
-        result: triageResult,
+      const { triage } = await submitAssessment({
+        chatMessages: chatMessages.map((m) => ({
+          role: m.role,
+          content: m.content,
+          isEmergency: m.isEmergency,
+        })),
+        symptoms: symptoms.map((s) => ({
+          name: s.name,
+          bodyPart: s.bodyPart,
+          severity: s.severity,
+          duration: s.duration,
+          description: s.description,
+        })),
+        followUpAnswers,
       });
+
+      setResult(triage);
+      setTriageResult(triage);
     } catch (err) {
       console.error('Analysis error:', err);
-      setError('Failed to generate assessment. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to generate assessment. Please try again.');
     } finally {
       setIsLoading(false);
     }
