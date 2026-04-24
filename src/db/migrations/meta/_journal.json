@@ -22,6 +22,13 @@
       "when": 1779452162476,
       "tag": "0002_loose_xorn",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779452615556,
+      "tag": "0003_previous_the_watchers",
+      "breakpoints": true
     }
   ]
 }

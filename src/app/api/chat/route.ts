@@ -1,7 +1,10 @@
 import 'server-only';
 import { generateObject } from 'ai';
 import { z } from 'zod';
+import { headers } from 'next/headers';
 import { defaultModel } from '@/server/ai';
+import { auth } from '@/server/auth/auth';
+import { recordAiCall } from '@/server/audit/ai-logger';
 
 const requestSchema = z.object({
   messages: z
@@ -38,6 +41,9 @@ const FALLBACK = {
   isEmergency: false,
 } as const;
 
+const MODEL_LABEL = 'gemini-1.5-flash';
+const FEATURE = 'chat';
+
 export async function POST(req: Request) {
   let body: unknown;
   try {
@@ -54,6 +60,12 @@ export async function POST(req: Request) {
     );
   }
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const promptForLogging = parsed.data.messages.map((m) => `${m.role}: ${m.content}`).join('\n');
+  const startedAt = Date.now();
+
   try {
     const result = await generateObject({
       model: defaultModel,
@@ -61,8 +73,30 @@ export async function POST(req: Request) {
       system: SYSTEM_PROMPT,
       messages: parsed.data.messages,
     });
+
+    await recordAiCall({
+      userId: session.user.id,
+      feature: FEATURE,
+      model: MODEL_LABEL,
+      prompt: promptForLogging,
+      status: 'success',
+      tokensIn: result.usage?.inputTokens,
+      tokensOut: result.usage?.outputTokens,
+      latencyMs: Date.now() - startedAt,
+    });
+
     return Response.json(result.object);
   } catch (error) {
+    await recordAiCall({
+      userId: session.user.id,
+      feature: FEATURE,
+      model: MODEL_LABEL,
+      prompt: promptForLogging,
+      status: 'fallback',
+      latencyMs: Date.now() - startedAt,
+      fallbackUsed: true,
+      errorMessage: error instanceof Error ? error.message : String(error),
+    });
     console.error('[api/chat] generation failed:', error);
     return Response.json(FALLBACK);
   }

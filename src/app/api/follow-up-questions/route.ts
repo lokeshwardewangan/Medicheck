@@ -1,7 +1,10 @@
 import 'server-only';
 import { generateObject } from 'ai';
 import { z } from 'zod';
+import { headers } from 'next/headers';
 import { defaultModel } from '@/server/ai';
+import { auth } from '@/server/auth/auth';
+import { recordAiCall } from '@/server/audit/ai-logger';
 import { followUpQuestionsSchema } from '@/lib/schema';
 import type { FollowUpQuestion } from '@/types';
 
@@ -50,6 +53,9 @@ const FALLBACK: FollowUpQuestion[] = [
   },
 ];
 
+const MODEL_LABEL = 'gemini-1.5-flash';
+const FEATURE = 'follow_up_questions';
+
 export async function POST(req: Request) {
   let body: unknown;
   try {
@@ -66,6 +72,9 @@ export async function POST(req: Request) {
     );
   }
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
   const symptomList = parsed.data.symptoms
     .map((s) => `- ${s.name}${s.bodyPart ? ` (${s.bodyPart})` : ''}`)
     .join('\n');
@@ -75,15 +84,40 @@ export async function POST(req: Request) {
       .map(([k, v]) => `- ${k}: ${v}`)
       .join('\n') || 'None';
 
+  const prompt = `Reported symptoms:\n${symptomList}\n\nPrevious answers:\n${answersBlock}`;
+  const startedAt = Date.now();
+
   try {
     const result = await generateObject({
       model: defaultModel,
       schema: followUpQuestionsSchema,
       system: SYSTEM_PROMPT,
-      prompt: `Reported symptoms:\n${symptomList}\n\nPrevious answers:\n${answersBlock}`,
+      prompt,
     });
+
+    await recordAiCall({
+      userId: session.user.id,
+      feature: FEATURE,
+      model: MODEL_LABEL,
+      prompt,
+      status: 'success',
+      tokensIn: result.usage?.inputTokens,
+      tokensOut: result.usage?.outputTokens,
+      latencyMs: Date.now() - startedAt,
+    });
+
     return Response.json(result.object satisfies FollowUpQuestion[]);
   } catch (error) {
+    await recordAiCall({
+      userId: session.user.id,
+      feature: FEATURE,
+      model: MODEL_LABEL,
+      prompt,
+      status: 'fallback',
+      latencyMs: Date.now() - startedAt,
+      fallbackUsed: true,
+      errorMessage: error instanceof Error ? error.message : String(error),
+    });
     console.error('[api/follow-up-questions] generation failed:', error);
     return Response.json(FALLBACK);
   }

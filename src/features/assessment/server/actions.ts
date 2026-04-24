@@ -14,6 +14,7 @@ import {
 import { member, memberProfile } from '@/db/schema/household';
 import { getCurrentMember } from '@/features/members/server/queries';
 import { generateTriage } from '@/server/triage/generate';
+import { recordPhiAccess } from '@/server/audit/phi-logger';
 import type { TriageResult, UserProfile } from '@/types';
 
 const submitInput = z.object({
@@ -97,7 +98,8 @@ export async function submitAssessment(
       description: s.description,
     })),
     parsed.followUpAnswers,
-    profile
+    profile,
+    session.user.id
   );
 
   const assessmentId = await withUserContext(session.user.id, async (tx) => {
@@ -155,6 +157,14 @@ export async function submitAssessment(
     });
 
     return created.id;
+  });
+
+  await recordPhiAccess({
+    userId: session.user.id,
+    action: 'create',
+    resourceType: 'assessment',
+    resourceId: assessmentId,
+    metadata: { memberId: current.id, triageLevel: triage.level },
   });
 
   return { assessmentId, triage };

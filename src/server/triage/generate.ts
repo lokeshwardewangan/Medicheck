@@ -2,7 +2,11 @@ import 'server-only';
 import { generateObject } from 'ai';
 import { defaultModel } from '@/server/ai';
 import { triageResultSchema } from '@/lib/schema';
+import { recordAiCall } from '@/server/audit/ai-logger';
 import type { TriageResult, UserProfile, Symptom } from '@/types';
+
+const MODEL_LABEL = 'gemini-1.5-flash';
+const FEATURE = 'triage';
 
 const SYSTEM_PROMPT = `You are a medical triage assistant for an Indian patient-companion app.
 
@@ -84,18 +88,44 @@ Produce a triage assessment.`;
 export async function generateTriage(
   symptoms: Symptom[],
   followUpAnswers: Record<string, string>,
-  profile: UserProfile | null
+  profile: UserProfile | null,
+  userId?: string | null
 ): Promise<TriageResult> {
+  const prompt = buildPrompt(symptoms, followUpAnswers, profile);
+  const startedAt = Date.now();
+
   try {
     const result = await generateObject({
       model: defaultModel,
       schema: triageResultSchema,
       system: SYSTEM_PROMPT,
-      prompt: buildPrompt(symptoms, followUpAnswers, profile),
+      prompt,
     });
+
+    await recordAiCall({
+      userId,
+      feature: FEATURE,
+      model: MODEL_LABEL,
+      prompt,
+      status: 'success',
+      tokensIn: result.usage?.inputTokens,
+      tokensOut: result.usage?.outputTokens,
+      latencyMs: Date.now() - startedAt,
+    });
+
     return result.object;
   } catch (error) {
-    console.error('[triage] generation failed:', error);
+    await recordAiCall({
+      userId,
+      feature: FEATURE,
+      model: MODEL_LABEL,
+      prompt,
+      status: 'fallback',
+      latencyMs: Date.now() - startedAt,
+      fallbackUsed: true,
+      errorMessage: error instanceof Error ? error.message : String(error),
+    });
+    console.error('[triage] generation failed, using fallback:', error);
     return FALLBACK;
   }
 }

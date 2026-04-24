@@ -1,7 +1,9 @@
 import 'server-only';
 import { z } from 'zod';
+import { headers } from 'next/headers';
 import { userProfileSchema } from '@/lib/schema';
 import { generateTriage } from '@/server/triage/generate';
+import { auth } from '@/server/auth/auth';
 import type { Symptom, UserProfile } from '@/types';
 
 const symptomInput = z.object({
@@ -35,10 +37,14 @@ export async function POST(req: Request) {
     );
   }
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
   const result = await generateTriage(
     parsed.data.symptoms as Symptom[],
     parsed.data.followUpAnswers,
-    (parsed.data.profile ?? null) as UserProfile | null
+    (parsed.data.profile ?? null) as UserProfile | null,
+    session.user.id
   );
 
   return Response.json(result);
