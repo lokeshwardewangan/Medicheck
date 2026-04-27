@@ -1,7 +1,8 @@
 import 'server-only';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { env } from '@/env';
 
-const apiKey = process.env.GEMINI_API_KEY ?? '';
+const apiKey = env.GEMINI_API_KEY ?? '';
 
 if (!apiKey) {
   console.warn('[ai] GEMINI_API_KEY is not set — AI calls will fail');

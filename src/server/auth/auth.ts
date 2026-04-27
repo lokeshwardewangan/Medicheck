@@ -6,6 +6,7 @@ import { nextCookies } from 'better-auth/next-js';
 import { db } from '@/db/client';
 import * as authSchema from '@/db/schema/auth';
 import { sendMagicLinkEmail } from '@/server/email/resend';
+import { env } from '@/env';
 import { bootstrapUser } from './bootstrap';
 
 export const auth = betterAuth({
@@ -13,8 +14,8 @@ export const auth = betterAuth({
     provider: 'pg',
     schema: authSchema,
   }),
-  secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL,
+  secret: env.BETTER_AUTH_SECRET,
+  baseURL: env.BETTER_AUTH_URL,
   emailAndPassword: { enabled: false },
   databaseHooks: {
     user: {

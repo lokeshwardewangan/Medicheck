@@ -1,12 +1,10 @@
 import 'server-only';
 import { drizzle, type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import { env } from '@/env';
 import * as schema from './schema';
 
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error('DATABASE_URL is not set');
-}
+const connectionString = env.DATABASE_URL;
 
 declare global {
   // eslint-disable-next-line no-var

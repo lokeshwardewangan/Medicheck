@@ -1,8 +1,9 @@
 import 'server-only';
 import { Resend } from 'resend';
+import { env } from '@/env';
 
-const apiKey = process.env.RESEND_API_KEY ?? '';
-const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev';
+const apiKey = env.RESEND_API_KEY ?? '';
+const fromEmail = env.RESEND_FROM_EMAIL;
 
 if (!apiKey) {
   console.warn('[email] RESEND_API_KEY is not set — outbound email will fail');
