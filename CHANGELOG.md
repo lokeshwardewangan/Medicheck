@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to MediCheck land here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+All notable changes to HealthMate land here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.1] — 2026-04-29
+
+### Changed
+- **Rebrand: MediCheck → HealthMate.** Product name, page metadata, navbar/footer logo text, magic-link email subject and body, PDF document title/author/header, landing page copy, README, CHANGELOG, and the npm package name (`symptom-checker` → `healthmate`) all updated.
+- `docker-compose.yml` now uses `healthmate` as the Postgres user, password, database name, container name, and volume name. **If you have a running local DB from v1.0.0, run `docker compose down -v` to drop the old volume, then `docker compose up -d && bun run db:migrate` to recreate.**
+- `.env.example` and README updated with the new local-dev `DATABASE_URL` (`postgres://healthmate:healthmate@localhost:5432/healthmate`). Update your `.env.local` to match.
 
 ## [1.0.0] — 2026-04-28
 

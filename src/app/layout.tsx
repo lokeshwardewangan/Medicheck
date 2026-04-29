@@ -8,7 +8,7 @@ const overpass = Overpass({
 });
 
 export const metadata: Metadata = {
-  title: "MediCheck - AI Symptom Checker",
+  title: "HealthMate - AI Symptom Checker",
   description:
     "Describe your symptoms naturally and get instant AI-powered guidance on the appropriate level of care.",
 };

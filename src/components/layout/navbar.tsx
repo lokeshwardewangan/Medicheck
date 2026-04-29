@@ -57,7 +57,7 @@ export function Navbar() {
               </motion.div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">
-                  MediCheck
+                  HealthMate
                 </span>
                 <span className="text-[10px] text-muted-foreground -mt-1 hidden sm:block">
                   AI Symptom Checker
@@ -157,7 +157,7 @@ export function Navbar() {
                     <Stethoscope className="h-5 w-5 text-white" />
                   </div>
                   <span className="text-lg font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-                    MediCheck
+                    HealthMate
                   </span>
                 </div>
 

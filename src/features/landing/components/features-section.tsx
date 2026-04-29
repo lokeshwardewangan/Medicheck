@@ -166,7 +166,7 @@ export function FeaturesSection() {
             transition={{ duration: 0.4, delay: 0.1 }}
             className="inline-block text-sm font-semibold text-teal-600 dark:text-teal-400 tracking-widest uppercase mb-3"
           >
-            Why MediCheck
+            Why HealthMate
           </motion.span>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
             <span className="text-slate-900 dark:text-white">Everything you need for </span>

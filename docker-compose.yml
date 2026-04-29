@@ -1,21 +1,21 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: medicheck-postgres
+    container_name: healthmate-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: medicheck
-      POSTGRES_PASSWORD: medicheck
-      POSTGRES_DB: medicheck
+      POSTGRES_USER: healthmate
+      POSTGRES_PASSWORD: healthmate
+      POSTGRES_DB: healthmate
     ports:
       - "5432:5432"
     volumes:
-      - medicheck-pgdata:/var/lib/postgresql/data
+      - healthmate-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U medicheck -d medicheck"]
+      test: ["CMD-SHELL", "pg_isready -U healthmate -d healthmate"]
       interval: 5s
       timeout: 5s
       retries: 10
 
 volumes:
-  medicheck-pgdata:
+  healthmate-pgdata:

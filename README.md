@@ -1,4 +1,4 @@
-# MediCheck
+# HealthMate
 
 Patient-companion app for the Indian outpatient care gap. Built on Next.js 16, React 19, Drizzle + Postgres, Better-Auth, and Google Gemini via the Vercel AI SDK.
 
@@ -41,7 +41,7 @@ All env vars are validated at boot via [src/env.ts](src/env.ts). Missing require
 
 | Variable | Required | Notes |
 |---|---|---|
-| `DATABASE_URL` | Yes | Postgres connection string. For local dev: `postgres://medicheck:medicheck@localhost:5432/medicheck`. Production: Neon. |
+| `DATABASE_URL` | Yes | Postgres connection string. For local dev: `postgres://healthmate:healthmate@localhost:5432/healthmate`. Production: Neon. |
 | `BETTER_AUTH_SECRET` | Yes | Session signing secret. Generate with `openssl rand -base64 32`. |
 | `BETTER_AUTH_URL` | Defaulted | Public origin where the app is served. Defaults to `http://localhost:3000`. |
 | `GEMINI_API_KEY` | Soft | Without it, AI calls fail; the app still boots. Get from https://aistudio.google.com/apikey. |

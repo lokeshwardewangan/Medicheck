@@ -35,7 +35,7 @@ export function Footer() {
                 <Stethoscope className="h-5 w-5 text-white" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
-                MediCheck
+                HealthMate
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed mb-6 max-w-xs">
@@ -85,7 +85,7 @@ export function Footer() {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-slate-500 text-center sm:text-left">
-            © {new Date().getFullYear()} MediCheck. All rights reserved.
+            © {new Date().getFullYear()} HealthMate. All rights reserved.
           </p>
           <div className="flex items-center gap-1 text-sm text-slate-500">
             <span>Built with</span>

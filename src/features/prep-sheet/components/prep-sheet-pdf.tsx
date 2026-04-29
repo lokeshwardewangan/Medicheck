@@ -72,13 +72,13 @@ export function PrepSheetDocument({ memberName, prepSheet, generatedAt = new Dat
 
   return (
     <Document
-      title={`MediCheck prep sheet — ${memberName}`}
-      author="MediCheck"
-      creator="MediCheck"
+      title={`HealthMate prep sheet — ${memberName}`}
+      author="HealthMate"
+      creator="HealthMate"
     >
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.brand}>MediCheck · Doctor visit prep</Text>
+          <Text style={styles.brand}>HealthMate · Doctor visit prep</Text>
           <Text style={styles.title}>{memberName}</Text>
           <Text style={styles.meta}>Generated {ts}</Text>
         </View>

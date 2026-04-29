@@ -405,7 +405,7 @@ export function HeroSection() {
                     <Stethoscope className="h-5 w-5 text-white" />
                   </motion.div>
                   <div className="flex-1">
-                    <p className="font-semibold text-slate-900 dark:text-white text-sm">MediCheck AI</p>
+                    <p className="font-semibold text-slate-900 dark:text-white text-sm">HealthMate AI</p>
                     <div className="flex items-center gap-1.5">
                       <motion.div
                         className="w-2 h-2 rounded-full bg-emerald-500"
