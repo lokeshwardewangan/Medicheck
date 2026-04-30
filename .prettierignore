@@ -1,0 +1,32 @@
+# Build output
+.next
+out
+build
+dist
+
+# Dependencies
+node_modules
+
+# Lockfiles
+bun.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated SQL migrations — keep drizzle-kit's exact format
+src/db/migrations
+
+# Public static assets
+public
+
+# Env files
+.env*
+
+# IDE / OS
+.vscode
+.idea
+.DS_Store
+
+# Logs / coverage
+coverage
+*.log
