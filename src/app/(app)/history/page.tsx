@@ -38,13 +38,11 @@ export default async function HistoryPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container max-w-3xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
+      <div className="container mx-auto max-w-3xl px-4 py-8">
+        <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold mb-1">Your health history</h1>
-            <p className="text-muted-foreground">
-              Past assessments across all members
-            </p>
+            <h1 className="mb-1 text-2xl font-bold">Your health history</h1>
+            <p className="text-muted-foreground">Past assessments across all members</p>
           </div>
           <Link href="/">
             <Button variant="outline">← Back</Button>
@@ -52,13 +50,13 @@ export default async function HistoryPage() {
         </div>
 
         {items.length === 0 ? (
-          <Card className="text-center py-12">
+          <Card className="py-12 text-center">
             <CardContent>
-              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
                 <Stethoscope className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-medium mb-2">No history yet</h3>
-              <p className="text-muted-foreground mb-4">
+              <h3 className="mb-2 text-lg font-medium">No history yet</h3>
+              <p className="mb-4 text-muted-foreground">
                 Your completed symptom checks will appear here.
               </p>
               <Link href="/chat">
@@ -73,9 +71,9 @@ export default async function HistoryPage() {
             </p>
 
             {items.map((item) => (
-              <Card key={item.assessmentId} className="hover:shadow-md transition-shadow">
+              <Card key={item.assessmentId} className="transition-shadow hover:shadow-md">
                 <CardContent className="p-4">
-                  <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
+                  <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                     <Calendar className="h-4 w-4" />
                     <span>{formatDateTime(item.createdAt)}</span>
                     <span className="mx-1">·</span>
@@ -85,7 +83,7 @@ export default async function HistoryPage() {
 
                   {item.symptoms.length > 0 && (
                     <div className="mb-3">
-                      <p className="text-sm font-medium mb-1">Symptoms</p>
+                      <p className="mb-1 text-sm font-medium">Symptoms</p>
                       <div className="flex flex-wrap gap-1">
                         {item.symptoms.slice(0, 3).map((s, i) => (
                           <Badge key={i} variant="secondary" className="text-xs">

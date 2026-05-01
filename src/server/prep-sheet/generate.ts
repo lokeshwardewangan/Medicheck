@@ -4,11 +4,7 @@ import { and, desc, eq, gte, inArray } from 'drizzle-orm';
 import { defaultModel } from '@/server/ai';
 import { withUserContext } from '@/server/db/with-user-context';
 import { member, memberProfile } from '@/db/schema/household';
-import {
-  assessment,
-  symptomEntry,
-  triageResult,
-} from '@/db/schema/assessment';
+import { assessment, symptomEntry, triageResult } from '@/db/schema/assessment';
 import { recordAiCall } from '@/server/audit/ai-logger';
 import { prepSheetSchema, type PrepSheet } from '@/features/prep-sheet/lib/schema';
 

@@ -24,54 +24,58 @@ The hero feature is the **Pre-Visit Prep Sheet** — generate a one-page PDF fro
 
 ## Scripts
 
-| Script | What it does |
-|---|---|
-| `bun dev` | Next.js dev server |
-| `bun run build` | Production build |
-| `bun start` | Run production build |
-| `bun run lint` | ESLint |
-| `bun run db:generate` | Generate SQL migration from schema changes |
-| `bun run db:migrate` | Apply pending migrations to the database |
-| `bun run db:push` | Push schema directly (dev only — bypasses migration history) |
-| `bun run db:studio` | Open Drizzle Studio (browser UI for the database) |
+| Script                | What it does                                                 |
+| --------------------- | ------------------------------------------------------------ |
+| `bun dev`             | Next.js dev server                                           |
+| `bun run build`       | Production build                                             |
+| `bun start`           | Run production build                                         |
+| `bun run lint`        | ESLint                                                       |
+| `bun run db:generate` | Generate SQL migration from schema changes                   |
+| `bun run db:migrate`  | Apply pending migrations to the database                     |
+| `bun run db:push`     | Push schema directly (dev only — bypasses migration history) |
+| `bun run db:studio`   | Open Drizzle Studio (browser UI for the database)            |
 
 ## Environment variables
 
 All env vars are validated at boot via [src/env.ts](src/env.ts). Missing required vars cause a clear startup error.
 
-| Variable | Required | Notes |
-|---|---|---|
-| `DATABASE_URL` | Yes | Postgres connection string. For local dev: `postgres://healthmate:healthmate@localhost:5432/healthmate`. Production: Neon. |
-| `BETTER_AUTH_SECRET` | Yes | Session signing secret. Generate with `openssl rand -base64 32`. |
-| `BETTER_AUTH_URL` | Defaulted | Public origin where the app is served. Defaults to `http://localhost:3000`. |
-| `GEMINI_API_KEY` | Soft | Without it, AI calls fail; the app still boots. Get from https://aistudio.google.com/apikey. |
-| `RESEND_API_KEY` | Soft | Required to send magic-link emails. Sign up at https://resend.com. |
-| `RESEND_FROM_EMAIL` | Defaulted | Defaults to `onboarding@resend.dev` (Resend sandbox). For production, verify your own domain. |
-| `NEXT_PUBLIC_APP_URL` | Optional | Used by the browser auth client; falls back to `window.location.origin`. |
-| `NEXT_PUBLIC_SENTRY_DSN` | Optional | If set, errors are reported to Sentry. App boots fine without. |
+| Variable                 | Required  | Notes                                                                                                                      |
+| ------------------------ | --------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`           | Yes       | Postgres connection string. For local dev: `postgres://healthmate:healthmate@localhost:5432/healthmate`. Production: Neon. |
+| `BETTER_AUTH_SECRET`     | Yes       | Session signing secret. Generate with `openssl rand -base64 32`.                                                           |
+| `BETTER_AUTH_URL`        | Defaulted | Public origin where the app is served. Defaults to `http://localhost:3000`.                                                |
+| `GEMINI_API_KEY`         | Soft      | Without it, AI calls fail; the app still boots. Get from https://aistudio.google.com/apikey.                               |
+| `RESEND_API_KEY`         | Soft      | Required to send magic-link emails. Sign up at https://resend.com.                                                         |
+| `RESEND_FROM_EMAIL`      | Defaulted | Defaults to `onboarding@resend.dev` (Resend sandbox). For production, verify your own domain.                              |
+| `NEXT_PUBLIC_APP_URL`    | Optional  | Used by the browser auth client; falls back to `window.location.origin`.                                                   |
+| `NEXT_PUBLIC_SENTRY_DSN` | Optional  | If set, errors are reported to Sentry. App boots fine without.                                                             |
 
 ⚠️ Never commit `.env.local`. `.env.example` exists for documentation only — never paste a real key into it.
 
 ## Production deployment
 
 **Database (Neon):**
+
 1. Create a Neon project.
 2. Copy the pooled connection string (with `?sslmode=require`).
 3. Set as `DATABASE_URL` in your hosting environment.
 4. After each deploy that ships a new migration, run `bun run db:migrate` against the production DB.
 
 **App (Vercel):**
+
 1. Push to GitHub.
 2. Import the repo in Vercel.
 3. Add all required env vars (see table above).
 4. Deploy.
 
 **Email (Resend):**
+
 1. Sign up at https://resend.com (3,000 emails/month free).
 2. Verify your domain and set `RESEND_FROM_EMAIL=login@yourdomain.in`.
 3. Until verified, the sandbox `onboarding@resend.dev` works for testing only.
 
 **Observability (Sentry, optional):**
+
 1. Create a Next.js project on Sentry.
 2. Set `NEXT_PUBLIC_SENTRY_DSN` in env.
 3. For uploaded source maps in production stack traces, wrap `next.config.ts` with `withSentryConfig` and add `SENTRY_AUTH_TOKEN` at build time — left as a v1.1 enhancement.

@@ -33,18 +33,17 @@ export function Navbar() {
       transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? 'border-b bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl shadow-sm shadow-slate-200/50 dark:shadow-slate-900/50'
-          : 'bg-transparent border-transparent'
+          ? 'border-b bg-white/90 shadow-sm shadow-slate-200/50 backdrop-blur-xl dark:bg-slate-950/90 dark:shadow-slate-900/50'
+          : 'border-transparent bg-transparent'
       }`}
     >
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-
           {/* Logo */}
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-            <Link href="/" className="flex items-center gap-2 group">
+            <Link href="/" className="group flex items-center gap-2">
               <motion.div
-                className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 via-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg"
+                className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 via-emerald-500 to-cyan-600 shadow-lg"
                 whileHover={{ rotate: [0, -8, 8, 0], scale: 1.1 }}
                 transition={{ duration: 0.4 }}
               >
@@ -56,10 +55,10 @@ export function Navbar() {
                 />
               </motion.div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-lg font-bold text-transparent">
                   HealthMate
                 </span>
-                <span className="text-[10px] text-muted-foreground -mt-1 hidden sm:block">
+                <span className="-mt-1 hidden text-[10px] text-muted-foreground sm:block">
                   AI Symptom Checker
                 </span>
               </div>
@@ -67,24 +66,24 @@ export function Navbar() {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <motion.div key={link.href} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                   <Link
                     href={link.href}
-                    className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                    className={`relative rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 ${
                       isActive
                         ? 'text-teal-600 dark:text-teal-400'
-                        : 'text-slate-600 hover:text-teal-600 dark:text-slate-300 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/30'
+                        : 'text-slate-600 hover:bg-teal-50 hover:text-teal-600 dark:text-slate-300 dark:hover:bg-teal-950/30 dark:hover:text-teal-400'
                     }`}
                   >
                     {link.label}
                     {isActive && (
                       <motion.div
                         layoutId="nav-underline"
-                        className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full"
+                        className="absolute right-2 bottom-0 left-2 h-0.5 rounded-full bg-gradient-to-r from-teal-600 to-cyan-600"
                         transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                       />
                     )}
@@ -95,11 +94,11 @@ export function Navbar() {
           </nav>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden items-center gap-3 md:flex">
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
               <Button
                 onClick={() => router.push('/chat')}
-                className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 hover:from-teal-700 hover:via-emerald-700 hover:to-cyan-700 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30 transition-all duration-300 relative overflow-hidden group"
+                className="group relative overflow-hidden bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 text-white shadow-lg shadow-teal-500/25 transition-all duration-300 hover:from-teal-700 hover:via-emerald-700 hover:to-cyan-700 hover:shadow-xl hover:shadow-teal-500/30"
               >
                 <motion.span
                   className="absolute inset-0 bg-white/10"
@@ -107,7 +106,7 @@ export function Navbar() {
                   whileHover={{ x: '100%' }}
                   transition={{ duration: 0.4 }}
                 />
-                <Stethoscope className="h-4 w-4 mr-2" />
+                <Stethoscope className="mr-2 h-4 w-4" />
                 Start Check
               </Button>
             </motion.div>
@@ -128,7 +127,7 @@ export function Navbar() {
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.92 }}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-100 dark:border-slate-800 dark:hover:bg-slate-800 transition-colors"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:hover:bg-slate-800"
               >
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -149,14 +148,14 @@ export function Navbar() {
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="flex flex-col h-full p-6"
+                className="flex h-full flex-col p-6"
               >
                 {/* Mobile Logo */}
-                <div className="flex items-center gap-2 pb-6 border-b">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 via-emerald-500 to-cyan-600 flex items-center justify-center">
+                <div className="flex items-center gap-2 border-b pb-6">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 via-emerald-500 to-cyan-600">
                     <Stethoscope className="h-5 w-5 text-white" />
                   </div>
-                  <span className="text-lg font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-lg font-bold text-transparent">
                     HealthMate
                   </span>
                 </div>
@@ -174,10 +173,10 @@ export function Navbar() {
                         <Link
                           href={link.href}
                           onClick={() => setIsOpen(false)}
-                          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                          className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-colors ${
                             pathname === link.href
                               ? 'bg-teal-50 text-teal-600 dark:bg-teal-950/30 dark:text-teal-400'
-                              : 'text-slate-600 hover:text-teal-600 hover:bg-teal-50 dark:text-slate-300 dark:hover:bg-teal-950/30'
+                              : 'text-slate-600 hover:bg-teal-50 hover:text-teal-600 dark:text-slate-300 dark:hover:bg-teal-950/30'
                           }`}
                         >
                           <link.icon className="h-5 w-5" />
@@ -185,7 +184,7 @@ export function Navbar() {
                           {pathname === link.href && (
                             <motion.div
                               layoutId="mobile-active"
-                              className="ml-auto w-1.5 h-1.5 rounded-full bg-teal-500"
+                              className="ml-auto h-1.5 w-1.5 rounded-full bg-teal-500"
                             />
                           )}
                         </Link>
@@ -199,28 +198,33 @@ export function Navbar() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.45 }}
-                  className="border-t pt-6 space-y-3"
+                  className="space-y-3 border-t pt-6"
                 >
                   <Button
-                    onClick={() => { router.push('/chat'); setIsOpen(false); }}
+                    onClick={() => {
+                      router.push('/chat');
+                      setIsOpen(false);
+                    }}
                     className="w-full bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 text-white"
                   >
-                    <Stethoscope className="h-4 w-4 mr-2" />
+                    <Stethoscope className="mr-2 h-4 w-4" />
                     Start Symptom Check
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => { router.push('/history'); setIsOpen(false); }}
+                    onClick={() => {
+                      router.push('/history');
+                      setIsOpen(false);
+                    }}
                     className="w-full"
                   >
-                    <History className="h-4 w-4 mr-2" />
+                    <History className="mr-2 h-4 w-4" />
                     View History
                   </Button>
                 </motion.div>
               </motion.div>
             </SheetContent>
           </Sheet>
-
         </div>
       </div>
     </motion.header>

@@ -19,13 +19,14 @@ const triageLevels = [
     badge: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
     glow: 'shadow-red-500/10',
     iconBg: 'bg-red-100 dark:bg-red-900/30',
-    examples: ['Chest pain', 'Can\'t breathe', 'Stroke signs', 'Severe bleeding'],
+    examples: ['Chest pain', "Can't breathe", 'Stroke signs', 'Severe bleeding'],
   },
   {
     icon: Clock,
     level: 'Urgent' as TriageLevel,
     tagline: 'See a doctor within 24h',
-    description: 'Symptoms that need prompt medical attention but are not immediately life-threatening.',
+    description:
+      'Symptoms that need prompt medical attention but are not immediately life-threatening.',
     iconColor: 'text-orange-600 dark:text-orange-400',
     bg: 'bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/10',
     border: 'border-orange-200 dark:border-orange-800',
@@ -68,7 +69,7 @@ const triageLevels = [
   },
 ];
 
-function TriageCard({ triage, index }: { triage: typeof triageLevels[0]; index: number }) {
+function TriageCard({ triage, index }: { triage: (typeof triageLevels)[0]; index: number }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
 
@@ -82,11 +83,11 @@ function TriageCard({ triage, index }: { triage: typeof triageLevels[0]; index: 
       <motion.div
         whileHover={{ y: -6, scale: 1.01 }}
         transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-        className={`relative h-full p-6 rounded-2xl ${triage.bg} border ${triage.border} ${triage.hoverBorder} transition-colors duration-300 shadow-xl ${triage.glow} overflow-hidden cursor-default`}
+        className={`relative h-full rounded-2xl p-6 ${triage.bg} border ${triage.border} ${triage.hoverBorder} shadow-xl transition-colors duration-300 ${triage.glow} cursor-default overflow-hidden`}
       >
         {/* Top accent pulse */}
         <motion.div
-          className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${triage.dot}`}
+          className={`absolute top-0 right-0 left-0 h-1 rounded-t-2xl ${triage.dot}`}
           initial={{ scaleX: 0 }}
           animate={inView ? { scaleX: 1 } : {}}
           transition={{ duration: 0.6, delay: index * 0.1 + 0.3, ease: 'easeOut' }}
@@ -94,25 +95,25 @@ function TriageCard({ triage, index }: { triage: typeof triageLevels[0]; index: 
         />
 
         {/* Icon + Badge row */}
-        <div className="flex items-start justify-between mb-4 pt-1">
+        <div className="mb-4 flex items-start justify-between pt-1">
           <motion.div
             whileHover={{ rotate: [0, -10, 10, 0] }}
             transition={{ duration: 0.4 }}
-            className={`w-12 h-12 rounded-xl ${triage.iconBg} flex items-center justify-center`}
+            className={`h-12 w-12 rounded-xl ${triage.iconBg} flex items-center justify-center`}
           >
             <triage.icon className={`h-6 w-6 ${triage.iconColor}`} />
           </motion.div>
-          <span className={`text-xs font-bold px-3 py-1 rounded-full ${triage.badge}`}>
+          <span className={`rounded-full px-3 py-1 text-xs font-bold ${triage.badge}`}>
             {triage.level.toUpperCase()}
           </span>
         </div>
 
         {/* Title & tagline */}
-        <h3 className={`text-lg font-bold mb-1 ${triage.iconColor}`}>{triage.level}</h3>
-        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wide">
+        <h3 className={`mb-1 text-lg font-bold ${triage.iconColor}`}>{triage.level}</h3>
+        <p className="mb-3 text-xs font-semibold tracking-wide text-slate-500 uppercase dark:text-slate-400">
           {triage.tagline}
         </p>
-        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+        <p className="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
           {triage.description}
         </p>
 
@@ -127,7 +128,7 @@ function TriageCard({ triage, index }: { triage: typeof triageLevels[0]; index: 
               className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-500"
             >
               <motion.div
-                className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${triage.dot}`}
+                className={`h-1.5 w-1.5 flex-shrink-0 rounded-full ${triage.dot}`}
                 animate={{ scale: [1, 1.4, 1] }}
                 transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
               />
@@ -137,7 +138,9 @@ function TriageCard({ triage, index }: { triage: typeof triageLevels[0]; index: 
         </div>
 
         {/* Glow overlay on hover */}
-        <div className={`absolute inset-0 rounded-2xl opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-br from-white/20 to-transparent`} />
+        <div
+          className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-0 transition-opacity duration-500 hover:opacity-100`}
+        />
       </motion.div>
     </motion.div>
   );
@@ -150,46 +153,46 @@ export function TriageLevelsSection() {
   const disclaimerInView = useInView(disclaimerRef, { once: true });
 
   return (
-    <section className="py-20 lg:py-32 bg-white dark:bg-slate-950 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-50/50 to-transparent dark:from-slate-900/50 pointer-events-none" />
+    <section className="relative overflow-hidden bg-white py-20 lg:py-32 dark:bg-slate-950">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-50/50 to-transparent dark:from-slate-900/50" />
       <motion.div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px"
+        className="absolute top-0 left-1/2 h-px w-full -translate-x-1/2"
         style={{ background: 'linear-gradient(90deg, transparent, #14b8a6, transparent)' }}
         animate={{ opacity: [0.3, 0.8, 0.3] }}
         transition={{ duration: 3, repeat: Infinity }}
       />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="relative container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           ref={headerRef}
           initial={{ opacity: 0, y: 30 }}
           animate={headerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-14"
+          className="mx-auto mb-14 max-w-3xl text-center"
         >
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
             animate={headerInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="inline-block text-sm font-semibold text-teal-600 dark:text-teal-400 tracking-widest uppercase mb-3"
+            className="mb-3 inline-block text-sm font-semibold tracking-widest text-teal-600 uppercase dark:text-teal-400"
           >
             Care Levels
           </motion.span>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+          <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
             <span className="text-slate-900 dark:text-white">Understanding </span>
             <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
               Triage Levels
             </span>
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400">
-            Our AI categorizes your symptoms into four clear care levels, so you
-            always know the right next step.
+            Our AI categorizes your symptoms into four clear care levels, so you always know the
+            right next step.
           </p>
         </motion.div>
 
         {/* Cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {triageLevels.map((triage, index) => (
             <TriageCard key={triage.level} triage={triage} index={index} />
           ))}
@@ -201,12 +204,12 @@ export function TriageLevelsSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={disclaimerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-center mt-10 p-5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 max-w-2xl mx-auto"
+          className="mx-auto mt-10 max-w-2xl rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center dark:border-slate-800 dark:bg-slate-900"
         >
           <p className="text-sm text-slate-500 dark:text-slate-400">
             <span className="font-semibold text-slate-700 dark:text-slate-300">Important:</span>{' '}
-            Triage levels are AI-guided estimates only. Always consult a qualified
-            healthcare professional for actual medical advice and diagnosis.
+            Triage levels are AI-guided estimates only. Always consult a qualified healthcare
+            professional for actual medical advice and diagnosis.
           </p>
         </motion.div>
 
@@ -216,24 +219,24 @@ export function TriageLevelsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="mt-14 rounded-3xl bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 p-8 lg:p-12 text-center relative overflow-hidden"
+          className="relative mt-14 overflow-hidden rounded-3xl bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 p-8 text-center lg:p-12"
         >
           <motion.div
             className="absolute inset-0 bg-white/5"
             animate={{ x: ['-100%', '100%'] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
           />
-          <h3 className="text-2xl lg:text-3xl font-bold text-white mb-3">
+          <h3 className="mb-3 text-2xl font-bold text-white lg:text-3xl">
             Ready to check your symptoms?
           </h3>
-          <p className="text-teal-100 mb-6 max-w-md mx-auto">
+          <p className="mx-auto mb-6 max-w-md text-teal-100">
             Takes less than 2 minutes. No sign-up required.
           </p>
           <motion.a
             href="/chat"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-teal-700 font-bold rounded-xl shadow-xl hover:shadow-2xl transition-shadow duration-300 text-base"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-bold text-teal-700 shadow-xl transition-shadow duration-300 hover:shadow-2xl"
           >
             Get Started Now
             <motion.span

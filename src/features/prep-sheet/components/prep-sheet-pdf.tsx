@@ -36,7 +36,12 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
   },
   chief: { fontSize: 13, fontFamily: 'Helvetica-Bold', marginBottom: 2 },
-  timelineItem: { marginBottom: 6, paddingLeft: 10, borderLeftWidth: 1.5, borderLeftColor: '#a3a3a3' },
+  timelineItem: {
+    marginBottom: 6,
+    paddingLeft: 10,
+    borderLeftWidth: 1.5,
+    borderLeftColor: '#a3a3a3',
+  },
   timelineWhen: { fontSize: 9, fontFamily: 'Helvetica-Bold' },
   timelineDesc: { fontSize: 10, color: '#404040' },
   twoCol: { flexDirection: 'row', gap: 16, marginBottom: 14 },

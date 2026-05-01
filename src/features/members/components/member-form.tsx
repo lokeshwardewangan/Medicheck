@@ -113,7 +113,12 @@ export function MemberForm({ defaultValues, submitLabel, onSubmit, cancelHref }:
           {busy ? 'Saving...' : submitLabel}
         </Button>
         {cancelHref && (
-          <Button type="button" variant="ghost" disabled={busy} onClick={() => router.push(cancelHref)}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={busy}
+            onClick={() => router.push(cancelHref)}
+          >
             Cancel
           </Button>
         )}

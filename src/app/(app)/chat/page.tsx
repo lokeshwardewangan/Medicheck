@@ -6,7 +6,10 @@ import { ChatContainer } from '@/features/chat/components/chat-container';
 import { RedFlagAlert } from '@/features/triage/components/red-flag-alert';
 import { LoadingSpinner } from '@/components/shared/loading-spinner';
 import { useAssessmentStore } from '@/features/assessment/store/assessment-store';
-import { checkEmergencyKeywords, extractEmergencySymptoms } from '@/features/triage/data/emergency-keywords';
+import {
+  checkEmergencyKeywords,
+  extractEmergencySymptoms,
+} from '@/features/triage/data/emergency-keywords';
 import { sendChatMessage } from '@/features/chat/lib/chat-client';
 import type { ChatMessage } from '@/types';
 
@@ -15,14 +18,8 @@ export default function ChatPage() {
   const [showEmergencyAlert, setShowEmergencyAlert] = useState(false);
   const [emergencySymptoms, setEmergencySymptoms] = useState<string[]>([]);
 
-  const {
-    chatMessages,
-    addChatMessage,
-    isLoading,
-    setLoading,
-    setStatus,
-    setStep,
-  } = useAssessmentStore();
+  const { chatMessages, addChatMessage, isLoading, setLoading, setStatus, setStep } =
+    useAssessmentStore();
 
   useEffect(() => {
     setStatus('chatting');
@@ -33,7 +30,8 @@ export default function ChatPage() {
       addChatMessage({
         id: 'welcome',
         role: 'assistant',
-        content: 'Hello! I\'m here to help you understand your symptoms. Please describe what you\'re experiencing in your own words.',
+        content:
+          "Hello! I'm here to help you understand your symptoms. Please describe what you're experiencing in your own words.",
         timestamp: new Date(),
         isEmergency: false,
       });
@@ -80,7 +78,8 @@ export default function ChatPage() {
         addChatMessage({
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: 'I apologize, but I\'m having trouble processing your message. Please try again or continue to the assessment.',
+          content:
+            "I apologize, but I'm having trouble processing your message. Please try again or continue to the assessment.",
           timestamp: new Date(),
         });
       } finally {
@@ -96,17 +95,14 @@ export default function ChatPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container max-w-3xl mx-auto px-4 py-6 h-screen flex flex-col">
+      <div className="container mx-auto flex h-screen max-w-3xl flex-col px-4 py-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold">Symptom Check</h1>
             <p className="text-sm text-muted-foreground">Step 1: Describe your symptoms</p>
           </div>
-          <button
-            onClick={handleContinue}
-            className="text-sm text-primary hover:underline"
-          >
+          <button onClick={handleContinue} className="text-sm text-primary hover:underline">
             Skip to Assessment →
           </button>
         </div>
@@ -122,7 +118,7 @@ export default function ChatPage() {
         )}
 
         {/* Chat */}
-        <div className="flex-1 border rounded-lg overflow-hidden bg-card">
+        <div className="flex-1 overflow-hidden rounded-lg border bg-card">
           <ChatContainer
             messages={chatMessages}
             onSendMessage={handleSendMessage}
@@ -135,7 +131,7 @@ export default function ChatPage() {
           <div className="mt-4 text-center">
             <button
               onClick={handleContinue}
-              className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+              className="rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Continue to Detailed Assessment
             </button>

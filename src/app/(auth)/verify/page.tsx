@@ -21,8 +21,8 @@ export default async function VerifyPage({
         <p className="text-sm text-muted-foreground">
           {email ? (
             <>
-              We sent a sign-in link to <span className="font-medium text-foreground">{email}</span>.
-              Click it to continue.
+              We sent a sign-in link to <span className="font-medium text-foreground">{email}</span>
+              . Click it to continue.
             </>
           ) : (
             'We sent you a sign-in link. Click it to continue.'

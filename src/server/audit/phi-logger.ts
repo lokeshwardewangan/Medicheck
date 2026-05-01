@@ -23,10 +23,7 @@ export async function recordPhiAccess(input: RecordPhiAccessInput): Promise<void
   let ua: string | null = null;
   try {
     const h = await headers();
-    ip =
-      h.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-      h.get('x-real-ip') ??
-      null;
+    ip = h.get('x-forwarded-for')?.split(',')[0]?.trim() ?? h.get('x-real-ip') ?? null;
     ua = h.get('user-agent');
   } catch {
     // headers() can throw if called outside a request scope; that's fine.

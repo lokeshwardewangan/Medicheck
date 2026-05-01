@@ -26,32 +26,32 @@ export function Footer() {
   return (
     <footer className="bg-slate-950 text-slate-400">
       {/* Main Footer */}
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-10">
+      <div className="container mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 via-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg">
+            <Link href="/" className="mb-4 flex items-center gap-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 via-emerald-500 to-cyan-600 shadow-lg">
                 <Stethoscope className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-xl font-bold text-transparent">
                 HealthMate
               </span>
             </Link>
-            <p className="text-slate-400 text-sm leading-relaxed mb-6 max-w-xs">
-              AI-powered symptom checker that helps you make better health
-              decisions. Not a replacement for professional medical care.
+            <p className="mb-6 max-w-xs text-sm leading-relaxed text-slate-400">
+              AI-powered symptom checker that helps you make better health decisions. Not a
+              replacement for professional medical care.
             </p>
             <div className="flex items-center gap-3">
               <a
                 href="#"
-                className="w-9 h-9 rounded-lg bg-slate-800 hover:bg-teal-600 flex items-center justify-center transition-colors"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 transition-colors hover:bg-teal-600"
               >
                 <GitFork className="h-4 w-4" />
               </a>
               <a
                 href="#"
-                className="w-9 h-9 rounded-lg bg-slate-800 hover:bg-teal-600 flex items-center justify-center transition-colors"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 transition-colors hover:bg-teal-600"
               >
                 <X className="h-4 w-4" />
               </a>
@@ -61,13 +61,13 @@ export function Footer() {
           {/* Link Columns */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="text-white font-semibold mb-4">{category}</h4>
+              <h4 className="mb-4 font-semibold text-white">{category}</h4>
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-400 hover:text-teal-400 transition-colors"
+                      className="text-sm text-slate-400 transition-colors hover:text-teal-400"
                     >
                       {link.label}
                     </Link>
@@ -82,17 +82,17 @@ export function Footer() {
       <Separator className="bg-slate-800" />
 
       {/* Bottom Bar */}
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-slate-500 text-center sm:text-left">
+      <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <p className="text-center text-sm text-slate-500 sm:text-left">
             © {new Date().getFullYear()} HealthMate. All rights reserved.
           </p>
           <div className="flex items-center gap-1 text-sm text-slate-500">
             <span>Built with</span>
-            <Heart className="h-4 w-4 text-rose-500 fill-rose-500 mx-1" />
+            <Heart className="mx-1 h-4 w-4 fill-rose-500 text-rose-500" />
             <span>for better health decisions</span>
           </div>
-          <p className="text-sm text-slate-600 text-center sm:text-right max-w-xs">
+          <p className="max-w-xs text-center text-sm text-slate-600 sm:text-right">
             This tool does not provide medical diagnosis. Always consult a doctor.
           </p>
         </div>

@@ -32,19 +32,22 @@ export function ChatContainer({
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       <ScrollArea className="flex-1 px-4" ref={scrollRef}>
-        <div className="py-4 space-y-2">
+        <div className="space-y-2 py-4">
           {messages.length === 0 && (
-            <div className="text-center text-muted-foreground py-8">
-              <p className="text-lg font-medium mb-2">Welcome to Symptom Checker</p>
+            <div className="py-8 text-center text-muted-foreground">
+              <p className="mb-2 text-lg font-medium">Welcome to Symptom Checker</p>
               <p className="text-sm">
                 Describe your symptoms naturally, like you&apos;re talking to a doctor.
               </p>
-              <p className="text-xs mt-4 text-muted-foreground">
-                Examples:<br />
-                &quot;I have a headache and fever for 2 days&quot;<br />
-                &quot;My stomach hurts after eating&quot;<br />
+              <p className="mt-4 text-xs text-muted-foreground">
+                Examples:
+                <br />
+                &quot;I have a headache and fever for 2 days&quot;
+                <br />
+                &quot;My stomach hurts after eating&quot;
+                <br />
                 &quot;I feel dizzy when I stand up&quot;
               </p>
             </div>
@@ -65,12 +68,8 @@ export function ChatContainer({
       </ScrollArea>
 
       {showInput && (
-        <div className="border-t p-4 bg-background">
-          <ChatInput
-            onSubmit={onSendMessage}
-            isLoading={isLoading}
-            disabled={disabled}
-          />
+        <div className="border-t bg-background p-4">
+          <ChatInput onSubmit={onSendMessage} isLoading={isLoading} disabled={disabled} />
         </div>
       )}
     </div>

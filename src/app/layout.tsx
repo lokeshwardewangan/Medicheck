@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
-import { Overpass } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Overpass } from 'next/font/google';
+import './globals.css';
 
 const overpass = Overpass({
-  variable: "--font-overpass",
-  subsets: ["latin"],
+  variable: '--font-overpass',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "HealthMate - AI Symptom Checker",
+  title: 'HealthMate - AI Symptom Checker',
   description:
-    "Describe your symptoms naturally and get instant AI-powered guidance on the appropriate level of care.",
+    'Describe your symptoms naturally and get instant AI-powered guidance on the appropriate level of care.',
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${overpass.variable} h-full antialiased`}>
-      <body className="font-sans min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col font-sans">{children}</body>
     </html>
   );
 }

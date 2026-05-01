@@ -8,11 +8,11 @@ services:
       POSTGRES_PASSWORD: healthmate
       POSTGRES_DB: healthmate
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - healthmate-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U healthmate -d healthmate"]
+      test: ['CMD-SHELL', 'pg_isready -U healthmate -d healthmate']
       interval: 5s
       timeout: 5s
       retries: 10

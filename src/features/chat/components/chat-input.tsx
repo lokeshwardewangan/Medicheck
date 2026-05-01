@@ -43,11 +43,11 @@ export function ChatInput({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={disabled || isLoading}
-        className="min-h-[80px] pr-24 resize-none"
+        className="min-h-[80px] resize-none pr-24"
         maxLength={1000}
       />
 
-      <div className="absolute bottom-2 right-2 flex gap-2">
+      <div className="absolute right-2 bottom-2 flex gap-2">
         <Button
           type="button"
           size="icon"
@@ -65,17 +65,11 @@ export function ChatInput({
           disabled={!message.trim() || isLoading || disabled}
           className="h-8 w-8"
         >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Send className="h-4 w-4" />
-          )}
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
         </Button>
       </div>
 
-      <div className="text-xs text-muted-foreground mt-1 text-right">
-        {message.length}/1000
-      </div>
+      <div className="mt-1 text-right text-xs text-muted-foreground">{message.length}/1000</div>
     </form>
   );
 }

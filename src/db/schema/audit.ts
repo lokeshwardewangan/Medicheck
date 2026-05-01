@@ -1,4 +1,13 @@
-import { pgTable, text, timestamp, uuid, integer, boolean, jsonb, pgEnum } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  integer,
+  boolean,
+  jsonb,
+  pgEnum,
+} from 'drizzle-orm/pg-core';
 import { user } from './auth';
 
 export const aiCallStatus = pgEnum('ai_call_status', ['success', 'error', 'fallback']);

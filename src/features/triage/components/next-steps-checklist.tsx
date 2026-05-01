@@ -45,11 +45,7 @@ export function NextStepsChecklist({ steps }: NextStepsChecklistProps) {
           {sortedSteps.map((step, index) => (
             <div
               key={step.id}
-              className={`
-                flex items-start gap-3 p-3 rounded-lg border transition-all
-                ${step.isEmergency ? 'border-red-300 bg-red-50 dark:bg-red-950/20' : 'border-border'}
-                ${completedSteps.has(step.id) ? 'opacity-60' : ''}
-              `}
+              className={`flex items-start gap-3 rounded-lg border p-3 transition-all ${step.isEmergency ? 'border-red-300 bg-red-50 dark:bg-red-950/20' : 'border-border'} ${completedSteps.has(step.id) ? 'opacity-60' : ''} `}
             >
               <Checkbox
                 checked={completedSteps.has(step.id)}
@@ -59,25 +55,20 @@ export function NextStepsChecklist({ steps }: NextStepsChecklistProps) {
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span
-                    className={`
-                      flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium
-                      ${step.isEmergency ? 'bg-red-500 text-white' : 'bg-primary text-primary-foreground'}
-                    `}
+                    className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-medium ${step.isEmergency ? 'bg-red-500 text-white' : 'bg-primary text-primary-foreground'} `}
                   >
                     {index + 1}
                   </span>
                   <p
                     className={`font-medium ${
-                      completedSteps.has(step.id) ? 'line-through text-muted-foreground' : ''
+                      completedSteps.has(step.id) ? 'text-muted-foreground line-through' : ''
                     }`}
                   >
                     {step.action}
                   </p>
                 </div>
                 {step.details && (
-                  <p className="text-sm text-muted-foreground mt-1 ml-7">
-                    {step.details}
-                  </p>
+                  <p className="mt-1 ml-7 text-sm text-muted-foreground">{step.details}</p>
                 )}
               </div>
             </div>
@@ -90,7 +81,7 @@ export function NextStepsChecklist({ steps }: NextStepsChecklistProps) {
               {completedSteps.size} of {steps.length} completed
             </p>
             {completedSteps.size === steps.length && (
-              <p className="text-sm font-medium text-green-600 mt-1">
+              <p className="mt-1 text-sm font-medium text-green-600">
                 Great job! You&apos;ve completed all steps.
               </p>
             )}

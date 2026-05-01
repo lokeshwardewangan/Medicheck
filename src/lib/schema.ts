@@ -63,13 +63,15 @@ export const triageResultSchema = z.object({
   title: z.string(),
   description: z.string(),
   explanation: z.array(z.string()),
-  nextSteps: z.array(z.object({
-    id: z.string(),
-    action: z.string(),
-    details: z.string().optional(),
-    priority: z.number(),
-    isEmergency: z.boolean().optional(),
-  })),
+  nextSteps: z.array(
+    z.object({
+      id: z.string(),
+      action: z.string(),
+      details: z.string().optional(),
+      priority: z.number(),
+      isEmergency: z.boolean().optional(),
+    })
+  ),
   disclaimer: z.string(),
 });
 

@@ -124,7 +124,7 @@ export default function AssessmentPage() {
 
   if (isGenerating) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <LoadingSpinner message="Preparing your assessment..." />
       </div>
     );
@@ -135,41 +135,33 @@ export default function AssessmentPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container max-w-2xl mx-auto px-4 py-8">
+      <div className="container mx-auto max-w-2xl px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold mb-2">Assessment Questions</h1>
-          <p className="text-muted-foreground">
-            Help us understand your symptoms better
-          </p>
+          <h1 className="mb-2 text-2xl font-bold">Assessment Questions</h1>
+          <p className="text-muted-foreground">Help us understand your symptoms better</p>
         </div>
 
         {/* Progress */}
-        <ProgressBar
-          currentStep={2}
-          totalSteps={4}
-        />
+        <ProgressBar currentStep={2} totalSteps={4} />
 
         {/* Progress Bar */}
         <div className="mb-8">
-          <div className="flex justify-between text-sm text-muted-foreground mb-2">
-            <span>Question {currentQuestionIndex + 1} of {followUpQuestions.length}</span>
+          <div className="mb-2 flex justify-between text-sm text-muted-foreground">
+            <span>
+              Question {currentQuestionIndex + 1} of {followUpQuestions.length}
+            </span>
             <span>{Math.round(progress)}% complete</span>
           </div>
-          <div className="w-full bg-muted rounded-full h-2">
+          <div className="h-2 w-full rounded-full bg-muted">
             <div
-              className="bg-primary h-2 rounded-full transition-all duration-300"
+              className="h-2 rounded-full bg-primary transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
 
-        {error && (
-          <ErrorRetry
-            message={error}
-            onDismiss={() => setError(null)}
-          />
-        )}
+        {error && <ErrorRetry message={error} onDismiss={() => setError(null)} />}
 
         {/* Question Card */}
         {currentQuestion && (

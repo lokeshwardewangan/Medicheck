@@ -68,7 +68,7 @@ export default function LoginPage() {
         )}
       </form>
 
-      <p className="text-xs text-muted-foreground text-center">
+      <p className="text-center text-xs text-muted-foreground">
         We never share your email. The link expires in 10 minutes.
       </p>
     </div>

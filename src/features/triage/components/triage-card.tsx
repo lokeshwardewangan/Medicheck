@@ -73,13 +73,12 @@ export function TriageCard({ level, title, description }: TriageCardProps) {
       <CardContent>
         <p className={`${config.color} text-sm leading-relaxed`}>{description}</p>
 
-        <div className="mt-4 p-3 bg-background/50 rounded-lg">
+        <div className="mt-4 rounded-lg bg-background/50 p-3">
           <div className="flex items-start gap-2">
-            <CheckCircle className="h-4 w-4 mt-0.5 text-muted-foreground" />
+            <CheckCircle className="mt-0.5 h-4 w-4 text-muted-foreground" />
             <p className="text-xs text-muted-foreground">
-              This assessment is based on the information you provided and is not a
-              medical diagnosis. Always consult a healthcare professional for proper
-              evaluation.
+              This assessment is based on the information you provided and is not a medical
+              diagnosis. Always consult a healthcare professional for proper evaluation.
             </p>
           </div>
         </div>

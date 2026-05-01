@@ -30,9 +30,7 @@ export const useHistoryStore = create<HistoryState>()(
 
       updateFeedback: (historyId, feedback) =>
         set((state) => ({
-          histories: state.histories.map((h) =>
-            h.id === historyId ? { ...h, feedback } : h
-          ),
+          histories: state.histories.map((h) => (h.id === historyId ? { ...h, feedback } : h)),
         })),
 
       deleteHistory: (historyId) =>

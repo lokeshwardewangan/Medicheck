@@ -10,17 +10,17 @@ export default async function MembersPage() {
   const members = await listMembers(session.user.id);
 
   return (
-    <div className="container max-w-2xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="container mx-auto max-w-2xl px-4 py-8">
+      <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Family members</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Track health for yourself and the people you care for.
           </p>
         </div>
         <Link href="/members/new">
           <Button>
-            <Plus className="size-4 mr-1" /> Add member
+            <Plus className="mr-1 size-4" /> Add member
           </Button>
         </Link>
       </div>

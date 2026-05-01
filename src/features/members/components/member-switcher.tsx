@@ -28,7 +28,7 @@ export function MemberSwitcher({ members, currentMemberId }: Props) {
         <span className="text-muted-foreground">No members yet</span>
         <Link href="/members/new">
           <Button size="sm">
-            <Plus className="size-4 mr-1" /> Add member
+            <Plus className="mr-1 size-4" /> Add member
           </Button>
         </Link>
       </div>
@@ -37,28 +37,28 @@ export function MemberSwitcher({ members, currentMemberId }: Props) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-xs uppercase tracking-wide text-muted-foreground">Logging for</span>
+      <span className="text-xs tracking-wide text-muted-foreground uppercase">Logging for</span>
 
       <div className="relative">
         <details className="group">
-          <summary className="flex items-center gap-2 px-3 py-1.5 rounded-md border bg-card hover:bg-accent cursor-pointer text-sm font-medium list-none [&::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer list-none items-center gap-2 rounded-md border bg-card px-3 py-1.5 text-sm font-medium hover:bg-accent [&::-webkit-details-marker]:hidden">
             <span>{current?.name ?? 'Select member'}</span>
             {current && (
               <span className="text-xs text-muted-foreground">
                 · {RELATION_LABELS[current.relation]}
               </span>
             )}
-            <ChevronDown className="size-4 ml-1" />
+            <ChevronDown className="ml-1 size-4" />
           </summary>
 
-          <div className="absolute z-10 mt-1 w-64 rounded-md border bg-popover shadow-md py-1">
+          <div className="absolute z-10 mt-1 w-64 rounded-md border bg-popover py-1 shadow-md">
             {members.map((m) => (
               <button
                 key={m.id}
                 type="button"
                 onClick={() => pick(m.id)}
                 disabled={pending}
-                className={`w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-accent text-left ${
+                className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-accent ${
                   m.id === current?.id ? 'bg-accent/50' : ''
                 }`}
               >
@@ -66,10 +66,10 @@ export function MemberSwitcher({ members, currentMemberId }: Props) {
                 <span className="text-xs text-muted-foreground">{RELATION_LABELS[m.relation]}</span>
               </button>
             ))}
-            <div className="border-t mt-1 pt-1">
+            <div className="mt-1 border-t pt-1">
               <Link
                 href="/members"
-                className="flex items-center px-3 py-2 text-sm hover:bg-accent text-muted-foreground"
+                className="flex items-center px-3 py-2 text-sm text-muted-foreground hover:bg-accent"
               >
                 Manage members
               </Link>

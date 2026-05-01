@@ -25,19 +25,11 @@ export async function getCurrentMember(userId: string): Promise<Member | null> {
 
   return withUserContext(userId, async (tx) => {
     if (cookieMemberId) {
-      const rows = await tx
-        .select()
-        .from(member)
-        .where(eq(member.id, cookieMemberId))
-        .limit(1);
+      const rows = await tx.select().from(member).where(eq(member.id, cookieMemberId)).limit(1);
       if (rows[0]) return rows[0];
     }
 
-    const rows = await tx
-      .select()
-      .from(member)
-      .where(eq(member.isPrimary, true))
-      .limit(1);
+    const rows = await tx.select().from(member).where(eq(member.isPrimary, true)).limit(1);
     return rows[0] ?? null;
   });
 }

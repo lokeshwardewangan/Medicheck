@@ -11,29 +11,30 @@ export function PrepSheetPreview({ memberName, prepSheet }: Props) {
   return (
     <article className="space-y-6 print:space-y-4">
       <header className="space-y-1 border-b pb-4">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">Doctor visit prep</p>
+        <p className="text-xs tracking-wide text-muted-foreground uppercase">Doctor visit prep</p>
         <h2 className="text-2xl font-bold">{memberName}</h2>
         <p className="text-sm text-muted-foreground">
-          Generated {new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
+          Generated{' '}
+          {new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
         </p>
       </header>
 
       <section className="space-y-2">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        <h3 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
           Chief complaint
         </h3>
-        <p className="text-lg font-medium leading-relaxed">{prepSheet.chiefComplaint}</p>
+        <p className="text-lg leading-relaxed font-medium">{prepSheet.chiefComplaint}</p>
       </section>
 
       {prepSheet.timeline.length > 0 && (
         <section className="space-y-2">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <h3 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
             Timeline
           </h3>
           <ol className="space-y-2 border-l-2 border-muted pl-4">
             {prepSheet.timeline.map((entry, i) => (
               <li key={i} className="relative">
-                <span className="absolute -left-[1.4rem] top-1.5 size-3 rounded-full bg-primary" />
+                <span className="absolute top-1.5 -left-[1.4rem] size-3 rounded-full bg-primary" />
                 <div className="flex items-baseline gap-2">
                   <span className="text-sm font-medium">{entry.when}</span>
                   {entry.severity != null && (
@@ -49,16 +50,16 @@ export function PrepSheetPreview({ memberName, prepSheet }: Props) {
         </section>
       )}
 
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">
+            <CardTitle className="text-sm tracking-wide text-muted-foreground uppercase">
               Current medications
             </CardTitle>
           </CardHeader>
           <CardContent>
             {prepSheet.currentMedications.length > 0 ? (
-              <ul className="text-sm space-y-1">
+              <ul className="space-y-1 text-sm">
                 {prepSheet.currentMedications.map((m, i) => (
                   <li key={i}>• {m}</li>
                 ))}
@@ -71,13 +72,13 @@ export function PrepSheetPreview({ memberName, prepSheet }: Props) {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">
+            <CardTitle className="text-sm tracking-wide text-muted-foreground uppercase">
               Active conditions
             </CardTitle>
           </CardHeader>
           <CardContent>
             {prepSheet.activeConditions.length > 0 ? (
-              <ul className="text-sm space-y-1">
+              <ul className="space-y-1 text-sm">
                 {prepSheet.activeConditions.map((c, i) => (
                   <li key={i}>• {c}</li>
                 ))}
@@ -90,7 +91,7 @@ export function PrepSheetPreview({ memberName, prepSheet }: Props) {
 
         <Card className="sm:col-span-2">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm uppercase tracking-wide text-muted-foreground">
+            <CardTitle className="text-sm tracking-wide text-muted-foreground uppercase">
               Allergies
             </CardTitle>
           </CardHeader>
@@ -111,10 +112,10 @@ export function PrepSheetPreview({ memberName, prepSheet }: Props) {
       </div>
 
       <section className="space-y-2 border-t pt-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        <h3 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
           Questions to ask the doctor
         </h3>
-        <ol className="space-y-2 list-decimal list-inside">
+        <ol className="list-inside list-decimal space-y-2">
           {prepSheet.questionsForDoctor.map((q, i) => (
             <li key={i} className="text-base leading-relaxed">
               {q}
@@ -125,7 +126,7 @@ export function PrepSheetPreview({ memberName, prepSheet }: Props) {
 
       {prepSheet.notes && (
         <section className="space-y-2 border-t pt-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <h3 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
             Notes
           </h3>
           <p className="text-sm">{prepSheet.notes}</p>

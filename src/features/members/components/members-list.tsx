@@ -39,7 +39,7 @@ export function MembersList({ members }: { members: Member[] }) {
                   </span>
                 )}
               </div>
-              <div className="text-xs text-muted-foreground space-x-2">
+              <div className="space-x-2 text-xs text-muted-foreground">
                 <span>{RELATION_LABELS[m.relation]}</span>
                 {m.age !== null && <span>· Age {m.age}</span>}
                 {m.sex && <span>· {m.sex}</span>}

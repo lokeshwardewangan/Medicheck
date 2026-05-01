@@ -22,9 +22,7 @@ export const prepSheetSchema = z.object({
     .array(z.string())
     .min(2)
     .max(5)
-    .describe(
-      'Specific, actionable questions the patient should ask. Concrete, not generic.'
-    ),
+    .describe('Specific, actionable questions the patient should ask. Concrete, not generic.'),
   notes: z
     .string()
     .optional()

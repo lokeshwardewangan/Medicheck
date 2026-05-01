@@ -12,10 +12,7 @@ type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
  * `SET LOCAL` scopes the variable to the transaction; nothing leaks across
  * pooled connections.
  */
-export async function withUserContext<T>(
-  userId: string,
-  fn: (tx: Tx) => Promise<T>
-): Promise<T> {
+export async function withUserContext<T>(userId: string, fn: (tx: Tx) => Promise<T>): Promise<T> {
   return db.transaction(async (tx) => {
     await tx.execute(sql`SELECT set_config('app.user_id', ${userId}, true)`);
     return fn(tx);

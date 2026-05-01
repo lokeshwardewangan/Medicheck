@@ -84,8 +84,14 @@ export const triageResult = pgTable('triage_result', {
   level: triageLevelEnum('level').notNull(),
   title: text('title').notNull(),
   description: text('description').notNull(),
-  explanation: jsonb('explanation').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
-  nextSteps: jsonb('next_steps').$type<NextStep[]>().notNull().default(sql`'[]'::jsonb`),
+  explanation: jsonb('explanation')
+    .$type<string[]>()
+    .notNull()
+    .default(sql`'[]'::jsonb`),
+  nextSteps: jsonb('next_steps')
+    .$type<NextStep[]>()
+    .notNull()
+    .default(sql`'[]'::jsonb`),
   disclaimer: text('disclaimer').notNull(),
   feedback: triageFeedback('feedback'),
   createdAt: timestamp('created_at').notNull().defaultNow(),

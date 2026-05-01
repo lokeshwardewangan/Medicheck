@@ -38,9 +38,7 @@ export function PrepClient({ hasMember }: { hasMember: boolean }) {
     try {
       // Dynamic import keeps @react-pdf/renderer out of the initial bundle.
       const { pdf } = await import('@react-pdf/renderer');
-      const { PrepSheetDocument } = await import(
-        '@/features/prep-sheet/components/prep-sheet-pdf'
-      );
+      const { PrepSheetDocument } = await import('@/features/prep-sheet/components/prep-sheet-pdf');
 
       const blob = await pdf(
         <PrepSheetDocument
@@ -68,9 +66,7 @@ export function PrepClient({ hasMember }: { hasMember: boolean }) {
 
   if (!hasMember) {
     return (
-      <p className="text-sm text-muted-foreground">
-        Add a member first to generate a prep sheet.
-      </p>
+      <p className="text-sm text-muted-foreground">Add a member first to generate a prep sheet.</p>
     );
   }
 
@@ -78,12 +74,12 @@ export function PrepClient({ hasMember }: { hasMember: boolean }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-2">
         <Button onClick={generate} disabled={pending}>
-          <Sparkles className="size-4 mr-2" />
+          <Sparkles className="mr-2 size-4" />
           {pending ? 'Generating...' : state ? 'Regenerate' : 'Generate prep sheet'}
         </Button>
         {state && (
           <Button onClick={downloadPdf} disabled={downloading} variant="outline">
-            <Download className="size-4 mr-2" />
+            <Download className="mr-2 size-4" />
             {downloading ? 'Preparing PDF...' : 'Download PDF'}
           </Button>
         )}

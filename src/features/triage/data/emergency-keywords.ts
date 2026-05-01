@@ -7,7 +7,7 @@ export const EMERGENCY_KEYWORDS = [
   'chest tightness',
   'heart attack',
   'cardiac arrest',
-  'can\'t breathe',
+  "can't breathe",
   'difficulty breathing',
   'shortness of breath',
   'severe chest',
@@ -18,7 +18,7 @@ export const EMERGENCY_KEYWORDS = [
   'unconscious',
   'passed out',
   'fainted',
-  'can\'t move',
+  "can't move",
   'paralyzed',
   'slurred speech',
   'sudden confusion',
@@ -29,7 +29,7 @@ export const EMERGENCY_KEYWORDS = [
   // Trauma
   'severe bleeding',
   'heavy bleeding',
-  'bleeding won\'t stop',
+  "bleeding won't stop",
   'gunshot',
   'stab wound',
   'head injury',
@@ -39,7 +39,7 @@ export const EMERGENCY_KEYWORDS = [
 
   // Allergic
   'anaphylaxis',
-  'can\'t swallow',
+  "can't swallow",
   'throat closing',
   'severe allergic',
   'swelling face',
@@ -78,7 +78,8 @@ export const EMERGENCY_RESPONSE = {
     'If unconscious, start CPR if trained',
     'Stay on the line with emergency operator',
   ],
-  disclaimer: 'This is an automated emergency detection. When in doubt, always call emergency services.',
+  disclaimer:
+    'This is an automated emergency detection. When in doubt, always call emergency services.',
 };
 
 export function checkEmergencyKeywords(input: string): boolean {
@@ -88,7 +89,5 @@ export function checkEmergencyKeywords(input: string): boolean {
 
 export function extractEmergencySymptoms(input: string): string[] {
   const lowerInput = input.toLowerCase();
-  return EMERGENCY_KEYWORDS.filter((keyword) =>
-    lowerInput.includes(keyword.toLowerCase())
-  );
+  return EMERGENCY_KEYWORDS.filter((keyword) => lowerInput.includes(keyword.toLowerCase()));
 }

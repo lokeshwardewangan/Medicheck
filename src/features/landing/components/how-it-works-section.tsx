@@ -47,7 +47,7 @@ const steps = [
   },
 ];
 
-function StepCard({ step, index }: { step: typeof steps[0]; index: number }) {
+function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
   const isEven = index % 2 === 0;
@@ -61,11 +61,11 @@ function StepCard({ step, index }: { step: typeof steps[0]; index: number }) {
       className="relative flex gap-5 lg:gap-8"
     >
       {/* Icon column */}
-      <div className="flex flex-col items-center flex-shrink-0">
+      <div className="flex flex-shrink-0 flex-col items-center">
         <motion.div
           whileHover={{ scale: 1.1, rotate: 5 }}
           transition={{ type: 'spring', stiffness: 300 }}
-          className={`w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-gradient-to-br ${step.gradient} flex items-center justify-center shadow-xl ${step.shadow} relative z-10`}
+          className={`h-14 w-14 rounded-2xl bg-gradient-to-br lg:h-16 lg:w-16 ${step.gradient} flex items-center justify-center shadow-xl ${step.shadow} relative z-10`}
         >
           <step.icon className="h-7 w-7 text-white" />
         </motion.div>
@@ -77,7 +77,7 @@ function StepCard({ step, index }: { step: typeof steps[0]; index: number }) {
             animate={inView ? { scaleY: 1 } : {}}
             transition={{ duration: 0.6, delay: index * 0.12 + 0.4 }}
             style={{ originY: 0 }}
-            className={`w-0.5 flex-1 my-2 bg-gradient-to-b ${step.gradient} opacity-30 min-h-[40px]`}
+            className={`my-2 w-0.5 flex-1 bg-gradient-to-b ${step.gradient} min-h-[40px] opacity-30`}
           />
         )}
       </div>
@@ -89,16 +89,14 @@ function StepCard({ step, index }: { step: typeof steps[0]; index: number }) {
         className="flex-1 pb-10"
       >
         {/* Step number */}
-        <span className="inline-block text-xs font-bold tracking-widest text-slate-400 dark:text-slate-500 mb-2">
+        <span className="mb-2 inline-block text-xs font-bold tracking-widest text-slate-400 dark:text-slate-500">
           STEP {step.number}
         </span>
 
-        <h3 className="text-xl lg:text-2xl font-semibold mb-3 text-slate-900 dark:text-white">
+        <h3 className="mb-3 text-xl font-semibold text-slate-900 lg:text-2xl dark:text-white">
           {step.title}
         </h3>
-        <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-          {step.description}
-        </p>
+        <p className="leading-relaxed text-slate-600 dark:text-slate-400">{step.description}</p>
 
         {/* Arrow hint */}
         {index < steps.length - 1 && (
@@ -127,45 +125,48 @@ export function HowItWorksSection() {
   const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
 
   return (
-    <section ref={sectionRef} className="py-20 lg:py-32 relative overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-gradient-to-b from-slate-50 to-white py-20 lg:py-32 dark:from-slate-950 dark:to-slate-900"
+    >
       {/* Parallax background element */}
-      <motion.div
-        style={{ y: bgY }}
-        className="absolute inset-0 pointer-events-none"
-      >
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-400/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl" />
+      <motion.div style={{ y: bgY }} className="pointer-events-none absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-teal-400/5 blur-3xl" />
+        <div className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-cyan-400/5 blur-3xl" />
       </motion.div>
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="relative container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           ref={headerRef}
           initial={{ opacity: 0, y: 30 }}
           animate={headerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16 lg:mb-20"
+          className="mx-auto mb-16 max-w-3xl text-center lg:mb-20"
         >
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
             animate={headerInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="inline-block text-sm font-semibold text-teal-600 dark:text-teal-400 tracking-widest uppercase mb-3"
+            className="mb-3 inline-block text-sm font-semibold tracking-widest text-teal-600 uppercase dark:text-teal-400"
           >
             Simple Process
           </motion.span>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+          <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
             <span className="text-slate-900 dark:text-white">How It </span>
-            <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">Works</span>
+            <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+              Works
+            </span>
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400">
-            Get personalized health guidance in four simple steps. No appointments, no waiting rooms.
+            Get personalized health guidance in four simple steps. No appointments, no waiting
+            rooms.
           </p>
         </motion.div>
 
         {/* Steps — two column layout on large screens */}
-        <div className="max-w-3xl mx-auto lg:max-w-5xl">
-          <div className="grid lg:grid-cols-2 gap-0 lg:gap-x-16">
+        <div className="mx-auto max-w-3xl lg:max-w-5xl">
+          <div className="grid gap-0 lg:grid-cols-2 lg:gap-x-16">
             {steps.map((step, index) => (
               <StepCard key={step.number} step={step} index={index} />
             ))}
@@ -178,13 +179,13 @@ export function HowItWorksSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center mt-8"
+          className="mt-8 text-center"
         >
           <motion.a
             href="/chat"
             whileHover={{ scale: 1.04, y: -2 }}
             whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 text-white font-semibold rounded-xl shadow-xl shadow-teal-500/25 hover:shadow-2xl transition-shadow duration-300 text-base"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-teal-500/25 transition-shadow duration-300 hover:shadow-2xl"
           >
             <MessageSquare className="h-5 w-5" />
             Start Your Check Now

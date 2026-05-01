@@ -20,14 +20,8 @@ export default function ResultsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const {
-    chatMessages,
-    followUpAnswers,
-    setTriageResult,
-    setStep,
-    setStatus,
-    resetSession,
-  } = useAssessmentStore();
+  const { chatMessages, followUpAnswers, setTriageResult, setStep, setStatus, resetSession } =
+    useAssessmentStore();
 
   useEffect(() => {
     setStep(4);
@@ -70,7 +64,9 @@ export default function ResultsPage() {
       setTriageResult(triage);
     } catch (err) {
       console.error('Analysis error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to generate assessment. Please try again.');
+      setError(
+        err instanceof Error ? err.message : 'Failed to generate assessment. Please try again.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -92,7 +88,7 @@ export default function ResultsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <LoadingSpinner message="Analyzing your symptoms..." />
       </div>
     );
@@ -100,7 +96,7 @@ export default function ResultsPage() {
 
   if (error || !result) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center p-4">
         <ErrorRetry
           title="Analysis Failed"
           message={error || 'Unable to generate results'}
@@ -113,13 +109,11 @@ export default function ResultsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container max-w-2xl mx-auto px-4 py-8">
+      <div className="container mx-auto max-w-2xl px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold mb-2">Your Assessment Results</h1>
-          <p className="text-muted-foreground">
-            Based on the information you provided
-          </p>
+          <h1 className="mb-2 text-2xl font-bold">Your Assessment Results</h1>
+          <p className="text-muted-foreground">Based on the information you provided</p>
         </div>
 
         {/* Progress */}
@@ -127,11 +121,7 @@ export default function ResultsPage() {
 
         {/* Triage Result */}
         <div className="mb-6">
-          <TriageCard
-            level={result.level}
-            title={result.title}
-            description={result.description}
-          />
+          <TriageCard level={result.level} title={result.title} description={result.description} />
         </div>
 
         {/* Why This Result */}
@@ -145,7 +135,7 @@ export default function ResultsPage() {
         </div>
 
         {/* Disclaimer */}
-        <div className="bg-muted p-4 rounded-lg mb-6">
+        <div className="mb-6 rounded-lg bg-muted p-4">
           <p className="text-sm text-muted-foreground">{result.disclaimer}</p>
         </div>
 
@@ -153,7 +143,7 @@ export default function ResultsPage() {
         <FeedbackButtons onFeedback={handleFeedback} />
 
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t">
+        <div className="mt-8 flex flex-col gap-4 border-t pt-6 sm:flex-row">
           <Button variant="outline" className="flex-1" onClick={handleGoHome}>
             ← Back to Home
           </Button>

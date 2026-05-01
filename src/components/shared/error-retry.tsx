@@ -23,7 +23,7 @@ export function ErrorRetry({
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription className="mt-2">
         <p>{message}</p>
-        <div className="flex gap-2 mt-3">
+        <div className="mt-3 flex gap-2">
           {onRetry && (
             <Button
               variant="outline"

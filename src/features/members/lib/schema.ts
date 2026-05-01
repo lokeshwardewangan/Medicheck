@@ -1,13 +1,10 @@
 import { z } from 'zod';
 
-const ageField = z.preprocess(
-  (v) => {
-    if (v === '' || v === null || v === undefined) return null;
-    const n = Number(v);
-    return Number.isFinite(n) ? n : null;
-  },
-  z.number().int().min(0, 'Age must be 0 or greater').max(120, 'Age must be 120 or less').nullable()
-);
+const ageField = z.preprocess((v) => {
+  if (v === '' || v === null || v === undefined) return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}, z.number().int().min(0, 'Age must be 0 or greater').max(120, 'Age must be 120 or less').nullable());
 
 const sexField = z.preprocess(
   (v) => (v === '' || v === null || v === undefined ? null : v),

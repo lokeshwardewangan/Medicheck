@@ -54,17 +54,11 @@ export function FollowUpQuestionComponent({
     <div className="space-y-4">
       <div className="space-y-2">
         <h3 className="text-lg font-medium">{question.question}</h3>
-        {question.required && (
-          <span className="text-xs text-muted-foreground">* Required</span>
-        )}
+        {question.required && <span className="text-xs text-muted-foreground">* Required</span>}
       </div>
 
       {question.type === 'single_choice' && question.options && (
-        <RadioGroup
-          value={answer}
-          onValueChange={handleSingleChoice}
-          className="space-y-2"
-        >
+        <RadioGroup value={answer} onValueChange={handleSingleChoice} className="space-y-2">
           {question.options.map((option) => (
             <div key={option} className="flex items-center space-x-2">
               <RadioGroupItem value={option} id={option} />
@@ -83,9 +77,7 @@ export function FollowUpQuestionComponent({
               <Checkbox
                 id={option}
                 checked={selectedOptions.includes(option)}
-                onCheckedChange={(checked) =>
-                  handleMultipleChoice(option, checked as boolean)
-                }
+                onCheckedChange={(checked) => handleMultipleChoice(option, checked as boolean)}
               />
               <Label htmlFor={option} className="cursor-pointer">
                 {option}
@@ -103,11 +95,7 @@ export function FollowUpQuestionComponent({
             placeholder="Type your answer..."
             onKeyDown={(e) => e.key === 'Enter' && handleTextSubmit()}
           />
-          <Button
-            onClick={handleTextSubmit}
-            disabled={!answer.trim()}
-            size="sm"
-          >
+          <Button onClick={handleTextSubmit} disabled={!answer.trim()} size="sm">
             Continue
           </Button>
         </div>
@@ -122,11 +110,7 @@ export function FollowUpQuestionComponent({
             placeholder="Enter a number..."
             onKeyDown={(e) => e.key === 'Enter' && handleTextSubmit()}
           />
-          <Button
-            onClick={handleTextSubmit}
-            disabled={!answer.trim()}
-            size="sm"
-          >
+          <Button onClick={handleTextSubmit} disabled={!answer.trim()} size="sm">
             Continue
           </Button>
         </div>
