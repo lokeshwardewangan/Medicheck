@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+# Format + lint only the staged files (fast).
+bunx lint-staged
+
+# Full TypeScript check across the whole repo.
+# Replaces `next build` here because Next's build needs DATABASE_URL / auth secrets
+# to be set — those belong in CI, not on every developer's commit.
+npx tsc --noEmit
