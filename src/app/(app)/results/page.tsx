@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProgressBar } from '@/features/assessment/components/progress-bar';
 import { TriageCard } from '@/features/triage/components/triage-card';
@@ -20,30 +20,38 @@ export default function ResultsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { chatMessages, followUpAnswers, setTriageResult, setStep, setStatus, resetSession } =
-    useAssessmentStore();
+  const {
+    chatMessages,
+    followUpAnswers,
+    triageResult: cachedTriage,
+    setTriageResult,
+    setStep,
+    setStatus,
+    newChat,
+  } = useAssessmentStore();
 
-  useEffect(() => {
-    setStep(4);
-    setStatus('complete');
-    generateResults();
-  }, []);
-
-  const generateResults = async () => {
+  const generateResults = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
-    try {
-      const symptoms: Symptom[] = chatMessages
-        .filter((m) => m.role === 'user')
-        .map((m, i) => ({
-          id: `symptom-${i}`,
-          name: m.content.slice(0, 100),
-          severity: 5,
-          duration: followUpAnswers['duration'] || 'unknown',
-          description: m.content,
-        }));
+    const symptoms: Symptom[] = chatMessages
+      .filter((m) => m.role === 'user')
+      .map((m, i) => ({
+        id: `symptom-${i}`,
+        name: m.content.slice(0, 100),
+        severity: 5,
+        duration: followUpAnswers['duration'] || 'unknown',
+        description: m.content,
+      }));
 
+    if (symptoms.length === 0) {
+      // No usable input — surface a friendly empty state instead of a Zod dump.
+      setError('No symptoms were captured. Please describe what you’re experiencing first.');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
       const { triage } = await submitAssessment({
         chatMessages: chatMessages.map((m) => ({
           role: m.role,
@@ -70,7 +78,23 @@ export default function ResultsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [chatMessages, followUpAnswers, setTriageResult]);
+
+  useEffect(() => {
+    setStep(4);
+    setStatus('complete');
+
+    // If a triage result is already cached (just generated, or persisted across
+    // a refresh), show it immediately — don't re-call the AI.
+    if (cachedTriage) {
+      setResult(cachedTriage);
+      setIsLoading(false);
+      return;
+    }
+
+    generateResults();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleFeedback = (feedback: 'helpful' | 'not_helpful') => {
     // Could send to analytics or backend
@@ -78,7 +102,7 @@ export default function ResultsPage() {
   };
 
   const handleNewCheck = () => {
-    resetSession();
+    newChat();
     router.push('/chat');
   };
 
@@ -86,23 +110,53 @@ export default function ResultsPage() {
     router.push('/');
   };
 
+  const hasUserMessages = chatMessages.some((m) => m.role === 'user');
+
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <LoadingSpinner message="Analyzing your symptoms..." />
+      <div className="flex min-h-[calc(100dvh-200px)] items-center justify-center p-4">
+        <LoadingSpinner
+          size="lg"
+          message="Analyzing your symptoms…"
+          hint="This usually takes a few seconds."
+        />
       </div>
     );
   }
 
   if (error || !result) {
+    // Empty state — no chat input ever happened. Don't show a scary error,
+    // just guide them to start.
+    if (!hasUserMessages) {
+      return (
+        <div className="flex min-h-[calc(100dvh-200px)] items-center justify-center p-4">
+          <div className="max-w-md rounded-xl border bg-card p-8 text-center shadow-sm">
+            <h2 className="mb-2 text-lg font-semibold">No assessment yet</h2>
+            <p className="mb-6 text-sm text-muted-foreground">
+              Start by describing your symptoms in the chat. Once you&apos;ve answered a few
+              questions, your results will appear here.
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
+              <Button variant="outline" onClick={handleGoHome}>
+                ← Back to Home
+              </Button>
+              <Button onClick={handleNewCheck}>Start Symptom Check</Button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="flex min-h-screen items-center justify-center p-4">
-        <ErrorRetry
-          title="Analysis Failed"
-          message={error || 'Unable to generate results'}
-          onRetry={generateResults}
-          onDismiss={handleGoHome}
-        />
+      <div className="flex min-h-[calc(100dvh-200px)] items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <ErrorRetry
+            title="Couldn’t generate your results"
+            message={error || 'Something went wrong on our end.'}
+            onRetry={generateResults}
+            onDismiss={handleGoHome}
+          />
+        </div>
       </div>
     );
   }

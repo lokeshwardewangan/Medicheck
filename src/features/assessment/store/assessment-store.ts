@@ -45,6 +45,7 @@ interface AssessmentState {
   setStep: (step: number) => void;
   setStatus: (status: AssessmentState['status']) => void;
   resetSession: () => void;
+  newChat: () => void;
   saveSession: () => AssessmentSession | null;
   loadSession: (session: AssessmentSession) => void;
 }
@@ -111,6 +112,17 @@ export const useAssessmentStore = create<AssessmentState>()(
           sessionId: generateId(),
         }),
 
+      // Soft reset: clear the in-flight assessment (chat, symptoms, answers,
+      // triage) but keep the user's profile and start in "chatting" state.
+      newChat: () =>
+        set((state) => ({
+          ...initialState,
+          profile: state.profile,
+          sessionId: generateId(),
+          status: 'chatting',
+          currentStep: 1,
+        })),
+
       saveSession: () => {
         const state = get();
         if (!state.sessionId) return null;
@@ -146,9 +158,16 @@ export const useAssessmentStore = create<AssessmentState>()(
     {
       name: 'assessment-storage',
       storage: createJSONStorage(() => localStorage),
+      // Persist the in-flight assessment so refreshing /results or /summary
+      // doesn't lose data. profile is permanent; the rest is cleared by
+      // newChat() or resetSession() when the user starts over.
       partialize: (state) => ({
         profile: state.profile,
         chatMessages: state.chatMessages,
+        symptoms: state.symptoms,
+        followUpQuestions: state.followUpQuestions,
+        followUpAnswers: state.followUpAnswers,
+        triageResult: state.triageResult,
       }),
     }
   )
