@@ -1,14 +1,13 @@
 import 'server-only';
 import { generateObject } from 'ai';
 import { and, desc, eq, gte, inArray } from 'drizzle-orm';
-import { defaultModel } from '@/server/ai';
+import { defaultModel, defaultModelLabel } from '@/server/ai';
 import { withUserContext } from '@/server/db/with-user-context';
 import { member, memberProfile } from '@/db/schema/household';
 import { assessment, symptomEntry, triageResult } from '@/db/schema/assessment';
 import { recordAiCall } from '@/server/audit/ai-logger';
 import { prepSheetSchema, type PrepSheet } from '@/features/prep-sheet/lib/schema';
 
-const MODEL_LABEL = 'gemini-1.5-flash';
 const FEATURE = 'prep_sheet';
 const DEFAULT_WINDOW_DAYS = 14;
 
@@ -160,7 +159,7 @@ export async function generatePrepSheet(
     await recordAiCall({
       userId,
       feature: FEATURE,
-      model: MODEL_LABEL,
+      model: defaultModelLabel,
       prompt,
       status: 'success',
       tokensIn: result.usage?.inputTokens,
@@ -173,7 +172,7 @@ export async function generatePrepSheet(
     await recordAiCall({
       userId,
       feature: FEATURE,
-      model: MODEL_LABEL,
+      model: defaultModelLabel,
       prompt,
       status: 'error',
       latencyMs: Date.now() - startedAt,

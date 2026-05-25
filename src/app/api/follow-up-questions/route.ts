@@ -2,7 +2,7 @@ import 'server-only';
 import { generateObject } from 'ai';
 import { z } from 'zod';
 import { headers } from 'next/headers';
-import { defaultModel } from '@/server/ai';
+import { defaultModel, defaultModelLabel } from '@/server/ai';
 import { auth } from '@/server/auth/auth';
 import { recordAiCall } from '@/server/audit/ai-logger';
 import { followUpQuestionsSchema } from '@/lib/schema';
@@ -53,7 +53,6 @@ const FALLBACK: FollowUpQuestion[] = [
   },
 ];
 
-const MODEL_LABEL = 'gemini-1.5-flash';
 const FEATURE = 'follow_up_questions';
 
 export async function POST(req: Request) {
@@ -98,7 +97,7 @@ export async function POST(req: Request) {
     await recordAiCall({
       userId: session.user.id,
       feature: FEATURE,
-      model: MODEL_LABEL,
+      model: defaultModelLabel,
       prompt,
       status: 'success',
       tokensIn: result.usage?.inputTokens,
@@ -111,7 +110,7 @@ export async function POST(req: Request) {
     await recordAiCall({
       userId: session.user.id,
       feature: FEATURE,
-      model: MODEL_LABEL,
+      model: defaultModelLabel,
       prompt,
       status: 'fallback',
       latencyMs: Date.now() - startedAt,

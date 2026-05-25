@@ -1,11 +1,10 @@
 import 'server-only';
 import { generateObject } from 'ai';
-import { defaultModel } from '@/server/ai';
+import { defaultModel, defaultModelLabel } from '@/server/ai';
 import { triageResultSchema } from '@/lib/schema';
 import { recordAiCall } from '@/server/audit/ai-logger';
 import type { TriageResult, UserProfile, Symptom } from '@/types';
 
-const MODEL_LABEL = 'gemini-1.5-flash';
 const FEATURE = 'triage';
 
 const SYSTEM_PROMPT = `You are a medical triage assistant for an Indian patient-companion app.
@@ -105,7 +104,7 @@ export async function generateTriage(
     await recordAiCall({
       userId,
       feature: FEATURE,
-      model: MODEL_LABEL,
+      model: defaultModelLabel,
       prompt,
       status: 'success',
       tokensIn: result.usage?.inputTokens,
@@ -118,7 +117,7 @@ export async function generateTriage(
     await recordAiCall({
       userId,
       feature: FEATURE,
-      model: MODEL_LABEL,
+      model: defaultModelLabel,
       prompt,
       status: 'fallback',
       latencyMs: Date.now() - startedAt,
