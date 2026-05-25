@@ -12,7 +12,7 @@ import { ErrorRetry } from '@/components/shared/error-retry';
 import { Button } from '@/components/ui/button';
 import { useAssessmentStore } from '@/features/assessment/store/assessment-store';
 import { submitAssessment } from '@/features/assessment/server/actions';
-import type { TriageResult, Symptom } from '@/types';
+import type { TriageResult } from '@/types';
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -34,37 +34,24 @@ export default function ResultsPage() {
     setIsLoading(true);
     setError(null);
 
-    const symptoms: Symptom[] = chatMessages
-      .filter((m) => m.role === 'user')
-      .map((m, i) => ({
-        id: `symptom-${i}`,
-        name: m.content.slice(0, 100),
-        severity: 5,
-        duration: followUpAnswers['duration'] || 'unknown',
-        description: m.content,
-      }));
-
-    if (symptoms.length === 0) {
-      // No usable input — surface a friendly empty state instead of a Zod dump.
+    const hasUserContent = chatMessages.some((m) => m.role === 'user');
+    if (!hasUserContent) {
       setError('No symptoms were captured. Please describe what you’re experiencing first.');
       setIsLoading(false);
       return;
     }
 
     try {
+      // Pass the raw chat transcript so the AI reasons from the patient's
+      // own words. We no longer fabricate "symptoms" with severity 5 — the
+      // server prompt makes the model extract them from the conversation.
       const { triage } = await submitAssessment({
         chatMessages: chatMessages.map((m) => ({
           role: m.role,
           content: m.content,
           isEmergency: m.isEmergency,
         })),
-        symptoms: symptoms.map((s) => ({
-          name: s.name,
-          bodyPart: s.bodyPart,
-          severity: s.severity,
-          duration: s.duration,
-          description: s.description,
-        })),
+        symptoms: [],
         followUpAnswers,
       });
 

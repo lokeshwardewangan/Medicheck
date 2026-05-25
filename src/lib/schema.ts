@@ -1,9 +1,10 @@
 import { z } from 'zod';
 
-// User Profile Schema
+// User Profile Schema — age and sex are nullable to mirror the DB and
+// avoid coercing missing values to defaults the AI would misinterpret.
 export const userProfileSchema = z.object({
-  age: z.number().min(1).max(120).describe('Age in years'),
-  sex: z.enum(['male', 'female', 'other']),
+  age: z.number().int().min(0).max(120).nullable().describe('Age in years, or null if unknown'),
+  sex: z.enum(['male', 'female', 'other']).nullable(),
   existingConditions: z.array(z.string()).default([]),
   medications: z.array(z.string()).default([]),
   allergies: z.array(z.string()).default([]),

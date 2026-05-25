@@ -17,29 +17,37 @@ import { generateTriage } from '@/server/triage/generate';
 import { recordPhiAccess } from '@/server/audit/phi-logger';
 import type { TriageResult, UserProfile } from '@/types';
 
-const submitInput = z.object({
-  chatMessages: z
-    .array(
-      z.object({
-        role: z.enum(['user', 'assistant']),
-        content: z.string().min(1),
-        isEmergency: z.boolean().optional(),
-      })
-    )
-    .default([]),
-  symptoms: z
-    .array(
-      z.object({
-        name: z.string().min(1),
-        bodyPart: z.string().optional().nullable(),
-        severity: z.number().int().min(1).max(10),
-        duration: z.string().min(1),
-        description: z.string().optional(),
-      })
-    )
-    .min(1),
-  followUpAnswers: z.record(z.string(), z.string()).default({}),
-});
+const submitInput = z
+  .object({
+    chatMessages: z
+      .array(
+        z.object({
+          role: z.enum(['user', 'assistant']),
+          content: z.string().min(1),
+          isEmergency: z.boolean().optional(),
+        })
+      )
+      .default([]),
+    symptoms: z
+      .array(
+        z.object({
+          name: z.string().min(1),
+          bodyPart: z.string().optional().nullable(),
+          severity: z.number().int().min(1).max(10),
+          duration: z.string().min(1),
+          description: z.string().optional(),
+        })
+      )
+      .default([]),
+    followUpAnswers: z.record(z.string(), z.string()).default({}),
+  })
+  // Need either a real conversation or structured symptoms. Both empty means
+  // there's nothing to triage — surface this as a validation error instead of
+  // pushing junk to the AI.
+  .refine((v) => v.chatMessages.some((m) => m.role === 'user') || v.symptoms.length > 0, {
+    message: 'Provide either a chat transcript or at least one symptom.',
+    path: ['symptoms'],
+  });
 
 export type SubmitAssessmentInput = z.input<typeof submitInput>;
 export type SubmitAssessmentResult = {
@@ -63,10 +71,13 @@ async function buildProfileForMember(
       .limit(1);
     const p = profileRows[0];
 
+    // CRITICAL: do NOT coerce null age/sex to defaults like 0 or 'other'.
+    // The AI reads `Age: 0` as an infant and fabricates a pediatric triage.
+    // Pass null through and let the prompt renderer say "not provided".
     return {
       id: m.id,
-      age: m.age ?? 0,
-      sex: m.sex ?? 'other',
+      age: m.age ?? null,
+      sex: m.sex ?? null,
       existingConditions: p?.existingConditions ?? [],
       medications: p?.medications ?? [],
       allergies: p?.allergies ?? [],
@@ -88,8 +99,11 @@ export async function submitAssessment(
   const profile = await buildProfileForMember(session.user.id, current.id);
 
   // AI call is outside the transaction — it's slow and not transactional.
-  const triage = await generateTriage(
-    parsed.symptoms.map((s, i) => ({
+  // We pass the chat transcript as the primary signal so the model sees the
+  // patient's own words and follow-up answers, instead of fabricated
+  // "symptom" rows with placeholder severity values.
+  const triage = await generateTriage({
+    symptoms: parsed.symptoms.map((s, i) => ({
       id: `s-${i}`,
       name: s.name,
       bodyPart: s.bodyPart ?? undefined,
@@ -97,10 +111,17 @@ export async function submitAssessment(
       duration: s.duration,
       description: s.description,
     })),
-    parsed.followUpAnswers,
+    followUpAnswers: parsed.followUpAnswers,
     profile,
-    session.user.id
-  );
+    chatMessages: parsed.chatMessages.map((m) => ({
+      id: `m-${m.role}-${m.content.slice(0, 8)}`,
+      role: m.role,
+      content: m.content,
+      timestamp: new Date(),
+      isEmergency: m.isEmergency,
+    })),
+    userId: session.user.id,
+  });
 
   const assessmentId = await withUserContext(session.user.id, async (tx) => {
     const [created] = await tx
@@ -123,16 +144,18 @@ export async function submitAssessment(
       );
     }
 
-    await tx.insert(symptomEntry).values(
-      parsed.symptoms.map((s) => ({
-        assessmentId: created.id,
-        name: s.name,
-        bodyPart: s.bodyPart ?? null,
-        severity: s.severity,
-        duration: s.duration,
-        description: s.description ?? null,
-      }))
-    );
+    if (parsed.symptoms.length > 0) {
+      await tx.insert(symptomEntry).values(
+        parsed.symptoms.map((s) => ({
+          assessmentId: created.id,
+          name: s.name,
+          bodyPart: s.bodyPart ?? null,
+          severity: s.severity,
+          duration: s.duration,
+          description: s.description ?? null,
+        }))
+      );
+    }
 
     const answerEntries = Object.entries(parsed.followUpAnswers);
     if (answerEntries.length > 0) {

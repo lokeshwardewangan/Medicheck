@@ -40,12 +40,12 @@ export async function POST(req: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const result = await generateTriage(
-    parsed.data.symptoms as Symptom[],
-    parsed.data.followUpAnswers,
-    (parsed.data.profile ?? null) as UserProfile | null,
-    session.user.id
-  );
+  const result = await generateTriage({
+    symptoms: parsed.data.symptoms as Symptom[],
+    followUpAnswers: parsed.data.followUpAnswers,
+    profile: (parsed.data.profile ?? null) as UserProfile | null,
+    userId: session.user.id,
+  });
 
   return Response.json(result);
 }

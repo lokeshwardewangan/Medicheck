@@ -1,8 +1,11 @@
-// User Profile Types
+// User Profile Types — age and sex are nullable because a user may have
+// signed up without completing the profile yet. Code that feeds the AI MUST
+// render null as "not provided" and never coerce to a default like 0 (which
+// the model would interpret as an infant).
 export interface UserProfile {
   id: string;
-  age: number;
-  sex: 'male' | 'female' | 'other';
+  age: number | null;
+  sex: 'male' | 'female' | 'other' | null;
   existingConditions: string[];
   medications: string[];
   allergies: string[];
