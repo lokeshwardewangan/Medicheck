@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Stethoscope, Menu, User, History, Home, Info } from 'lucide-react';
+import { Stethoscope, Menu, History, Home, Info, LogOut, Loader2 } from 'lucide-react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'motion/react';
+import { UserMenu } from '@/features/auth/components/user-menu';
+import { signOut, useSession } from '@/features/auth/lib/auth-client';
 
 const navLinks = [
   { href: '/', label: 'Home', icon: Home },
@@ -110,15 +112,7 @@ export function Navbar() {
                 Start Check
               </Button>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.08, rotate: 5 }} whileTap={{ scale: 0.94 }}>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full border-slate-200 dark:border-slate-800"
-              >
-                <User className="h-4 w-4" />
-              </Button>
-            </motion.div>
+            <UserMenu />
           </div>
 
           {/* Mobile Menu */}
@@ -221,6 +215,7 @@ export function Navbar() {
                     <History className="mr-2 h-4 w-4" />
                     View History
                   </Button>
+                  <MobileSignOut onDone={() => setIsOpen(false)} />
                 </motion.div>
               </motion.div>
             </SheetContent>
@@ -228,5 +223,43 @@ export function Navbar() {
         </div>
       </div>
     </motion.header>
+  );
+}
+
+function MobileSignOut({ onDone }: { onDone: () => void }) {
+  const router = useRouter();
+  const { data: session } = useSession();
+  const [pending, start] = useTransition();
+
+  if (!session) return null;
+
+  function handleSignOut() {
+    start(async () => {
+      await signOut();
+      onDone();
+      router.push('/login');
+      router.refresh();
+    });
+  }
+
+  return (
+    <div className="mt-2 space-y-2 border-t pt-3">
+      <p className="truncate px-1 text-xs text-muted-foreground">
+        Signed in as <span className="font-medium text-foreground">{session.user.email}</span>
+      </p>
+      <Button
+        variant="ghost"
+        onClick={handleSignOut}
+        disabled={pending}
+        className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/30"
+      >
+        {pending ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <LogOut className="mr-2 h-4 w-4" />
+        )}
+        {pending ? 'Signing out…' : 'Sign out'}
+      </Button>
+    </div>
   );
 }
