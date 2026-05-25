@@ -1,4 +1,7 @@
-import * as Sentry from '@sentry/nextjs';
+// Sentry disabled. To re-enable: uncomment the import and delete the stub below.
+// import * as Sentry from '@sentry/nextjs';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Sentry: any = { init: () => {}, captureRequestError: undefined };
 
 export async function register() {
   const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
