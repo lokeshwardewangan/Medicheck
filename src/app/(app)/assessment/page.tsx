@@ -163,11 +163,13 @@ export default function AssessmentPage() {
 
         {error && <ErrorRetry message={error} onDismiss={() => setError(null)} />}
 
-        {/* Question Card */}
+        {/* Question Card — key on question id forces a fresh component
+            instance per question so internal input state doesn't leak. */}
         {currentQuestion && (
           <Card className="mb-6">
             <CardContent className="pt-6">
               <FollowUpQuestionComponent
+                key={currentQuestion.id}
                 question={currentQuestion}
                 onAnswer={handleAnswer}
                 currentAnswer={followUpAnswers[currentQuestion.id]}
