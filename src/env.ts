@@ -1,6 +1,11 @@
 import 'server-only';
 import { z } from 'zod';
 
+// Empty strings in .env (e.g. `NEXT_PUBLIC_SENTRY_DSN=`) bypass .optional()
+// and hit .url() validation. Normalize them to undefined first.
+const optionalUrl = z.preprocess((v) => (v === '' ? undefined : v), z.string().url().optional());
+const optionalString = z.preprocess((v) => (v === '' ? undefined : v), z.string().optional());
+
 const schema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
@@ -11,13 +16,13 @@ const schema = z.object({
 
   // Soft-required: features fail loudly when used without these, but the
   // app can boot for local development without them set.
-  GEMINI_API_KEY: z.string().optional(),
-  RESEND_API_KEY: z.string().optional(),
+  GEMINI_API_KEY: optionalString,
+  RESEND_API_KEY: optionalString,
   RESEND_FROM_EMAIL: z.string().email().default('onboarding@resend.dev'),
 
   // Browser-visible.
-  NEXT_PUBLIC_APP_URL: z.string().url().optional(),
-  NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
+  NEXT_PUBLIC_APP_URL: optionalUrl,
+  NEXT_PUBLIC_SENTRY_DSN: optionalUrl,
 });
 
 const result = schema.safeParse(process.env);
