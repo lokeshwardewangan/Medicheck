@@ -1,8 +1,8 @@
 import { Navbar } from '@/components/layout/navbar';
-import { Footer } from '@/components/layout/footer';
 import { MemberSwitcher } from '@/features/members/components/member-switcher';
 import { requireSession } from '@/server/auth/session';
 import { listMembers, getCurrentMember } from '@/features/members/server/queries';
+import { FooterConditional } from './footer-conditional';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await requireSession();
@@ -19,8 +19,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <MemberSwitcher members={members} currentMemberId={current?.id ?? null} />
         </div>
       </div>
-      <main className="flex-1">{children}</main>
-      <Footer />
+      <main className="flex flex-1 flex-col">{children}</main>
+      <FooterConditional />
     </>
   );
 }
