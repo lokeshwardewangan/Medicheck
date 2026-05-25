@@ -32,6 +32,17 @@ export function ChatInput({
     ta.style.height = `${Math.min(ta.scrollHeight, maxHeight)}px`;
   }, [message]);
 
+  // Keep focus on the input: on mount, and whenever the input becomes usable
+  // again (AI reply arrived / disabled flag cleared). Scheduled via rAF so the
+  // focus call lands after React has finished its commit.
+  useEffect(() => {
+    if (disabled || isLoading) return;
+    const id = requestAnimationFrame(() => {
+      textareaRef.current?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [disabled, isLoading]);
+
   const submit = () => {
     const trimmed = message.trim();
     if (!trimmed || isLoading || disabled) return;
