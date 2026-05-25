@@ -8,7 +8,9 @@ services:
       POSTGRES_PASSWORD: healthmate
       POSTGRES_DB: healthmate
     ports:
-      - '5432:5432'
+      # Host 5433 → container 5432, so it doesn't clash with a Windows-native
+      # PostgreSQL install also listening on 5432. DATABASE_URL must use 5433.
+      - '5433:5432'
     volumes:
       - healthmate-pgdata:/var/lib/postgresql/data
     healthcheck:
